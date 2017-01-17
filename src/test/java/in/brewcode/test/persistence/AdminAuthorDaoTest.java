@@ -1,8 +1,9 @@
 package in.brewcode.test.persistence;
 
 import in.brewcode.api.config.PersistenceConfig;
-import in.brewcode.api.persistence.dao.IAdminAuthorDao;
-import in.brewcode.api.persistence.entity.Author;
+import in.brewcode.api.dto.AuthorDto;
+import in.brewcode.api.service.IAdminService;
+import in.brewcode.test.utils.TestUtils;
 
 import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.Test;
@@ -17,18 +18,19 @@ import org.springframework.transaction.annotation.Transactional;
 @ContextConfiguration(loader = AnnotationConfigContextLoader.class, classes = { PersistenceConfig.class })
 public class AdminAuthorDaoTest {
 
+	
 	@Autowired
-	private IAdminAuthorDao adminAuthorDao;
+	private IAdminService adminService;
 
 	@Test
 	@Transactional
 	public void createAuthorAndNoErrorsGenerated() {
-		Author author = new Author();
-		System.out.println(author.getCreateDate());
-		author.setAuthorUserName(RandomStringUtils.randomAlphanumeric(8));
-	adminAuthorDao.save(author);
-	System.out.println("Good save "+ 	author.getCreateDate());
-	adminAuthorDao.update(author);
+		AuthorDto authorDto = new AuthorDto();
+		authorDto.setAuthorUserName(RandomStringUtils.randomAlphanumeric(8));
+	authorDto.setAuthorEmail(RandomStringUtils.randomAlphabetic(7) + TestUtils.EMAIL_EXTENSION);
+	adminService.createAuthor(authorDto);
+	
+	
 	}
 
 }

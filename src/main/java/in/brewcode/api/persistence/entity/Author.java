@@ -1,7 +1,8 @@
 package in.brewcode.api.persistence.entity;
 
+import in.brewcode.api.persistence.entity.common.CommonEntity;
+
 import java.io.Serializable;
-import java.sql.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -11,8 +12,6 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.PrePersist;
-import javax.persistence.PreUpdate;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.Where;
@@ -20,11 +19,11 @@ import org.hibernate.annotations.Where;
 @Entity
 @Table(name = "T_AUTHOR")
 @Where(clause = "IS_ACTIVE = 'Y'")
-public class Author implements Serializable {
+public class Author extends CommonEntity implements Serializable {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	@Column(name = "AUTHOR_ID")
-	private long authorId;
+	private Long authorId;
 
 	@Column(name = "AUTHOR_USER_NAME", unique = true)
 	private String authorUserName;
@@ -32,44 +31,6 @@ public class Author implements Serializable {
 	@Column(name = "AUTHOR_EMAIL", unique = true)
 	private String authorEmail;
 
-	@Column(name = "IS_ACTIVE")
-	private char isActive;
-
-	@Column(name = "CREATED_DATE")
-	private Date createdDate;
-
-	@Column(name = "LAST_UPDATED_DATE")
-	private Date lastUpdatedDate;
-
-	@PrePersist
-	protected void onCreate() {
-
-		this.createdDate = this.lastUpdatedDate = new Date(
-				new java.util.Date().getTime());
-		this.isActive = 'Y';
-	}
-
-	@PreUpdate
-	protected void onUpdate() {
-		this.lastUpdatedDate = new Date(new java.util.Date().getTime());
-
-	}
-
-	public Date getCreateDate() {
-		return createdDate;
-	}
-
-	public Date getLastUpdatedDate() {
-		return lastUpdatedDate;
-	}
-
-	public char getIsActive() {
-		return isActive;
-	}
-
-	public void setIsActive(char isActive) {
-		this.isActive = isActive;
-	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "AUTHOR_ROLE_ID")
@@ -95,9 +56,10 @@ public class Author implements Serializable {
 	 * No argument constructor of this entity / persistent class
 	 */
 	public Author() {
+	super();
 	}
 
-	public long getAuthorId() {
+	public Long getAuthorId() {
 		return authorId;
 	}
 

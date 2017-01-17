@@ -14,6 +14,8 @@ import org.springframework.context.annotation.PropertySource;
 import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 import org.springframework.core.env.Environment;
 import org.springframework.dao.annotation.PersistenceExceptionTranslationPostProcessor;
+import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
+import org.springframework.data.repository.query.QueryLookupStrategy.Key;
 import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.JpaVendorAdapter;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
@@ -27,6 +29,8 @@ import com.google.common.base.Preconditions;
 @EnableTransactionManagement
 @PropertySource("classpath:/persistence-${envTarget:mysql}.properties")
 @ComponentScan(basePackages={"in.brewcode.api.persistence", "in.brewcode.api.service"} )
+@EnableJpaRepositories(basePackages = "in.brewcode.api.persistence.dao", queryLookupStrategy = Key.CREATE_IF_NOT_FOUND)
+
 public class PersistenceConfig {
 
 	/**

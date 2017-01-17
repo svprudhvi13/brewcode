@@ -1,5 +1,7 @@
 package in.brewcode.api.persistence.entity;
 
+import in.brewcode.api.persistence.entity.common.CommonEntity;
+
 import java.io.Serializable;
 import java.util.Set;
 
@@ -19,7 +21,7 @@ import org.hibernate.annotations.Where;
 @Table(name="T_ROLE")
 @Where(clause = "IS_ACTIVE = 'Y'")
 
-public class Role implements Serializable{
+public class Role extends CommonEntity implements Serializable{
 	@Id
 	@Column(name="ROLE_ID")
 	private int id;
@@ -31,9 +33,6 @@ public class Role implements Serializable{
 	@JoinTable(name="T_ROLE_PRIVILEGE_MAPPING", joinColumns={@JoinColumn(name="ROLE_ID")},
 	inverseJoinColumns={@JoinColumn(name="PRIVILEGE_ID")})
 	private Set<Privilege> rolePrivileges;
-	
-	@Column(name="IS_ACTIVE")
-	private char isActive;
 	
 	public int getId() {
 		return id;

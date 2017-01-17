@@ -1,11 +1,10 @@
 package in.brewcode.api.persistence.dao;
 
-import in.brewcode.api.persistence.dao.common.IOperationsDao;
 import in.brewcode.api.persistence.entity.Content;
 
-import java.util.List;
+import org.springframework.data.repository.PagingAndSortingRepository;
 
-public interface IContentDao extends IOperationsDao<Content>{
+public interface IContentDao extends PagingAndSortingRepository<Content, Long>{
 
-	List<Content> getArticleContents(Long id);
+	//List<Content> getArticleContents(Long id);
 }

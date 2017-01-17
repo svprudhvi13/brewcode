@@ -73,7 +73,7 @@ public class ArticleController extends BaseController {
 	public void addContent(ContentDto contentDto, HttpServletResponse response){
 		Preconditions.checkNotNull(contentDto);
 		
-	articleAndContentService.saveOrUpdateContent(contentDto);	
+	articleAndContentService.saveContent(contentDto, contentDto.getArticleDtoId());	
 	
 	}
 	
@@ -81,7 +81,7 @@ public class ArticleController extends BaseController {
 	public void createArticle(ArticleDto articleDto){
 		Preconditions.checkNotNull(articleDto);
 		
-		articleAndContentService.saveOrUpdateArticle(articleDto);
+		articleAndContentService.saveArticle(articleDto);
 		
 	}
 	

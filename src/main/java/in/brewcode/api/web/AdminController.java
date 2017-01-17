@@ -4,9 +4,13 @@ import in.brewcode.api.dto.AuthorDto;
 import in.brewcode.api.service.IAdminService;
 import in.brewcode.api.web.common.BaseController;
 
+import java.util.List;
+
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -22,6 +26,10 @@ import com.google.common.base.Preconditions;
 @RequestMapping(value="/admin")
 public class AdminController extends BaseController {
 
+private static Logger logger = Logger.getLogger(AdminController.class);	
+
+@Autowired
+private ApplicationEventPublisher eventPublisher;
 @Autowired
 private IAdminService adminService;
 
@@ -32,8 +40,24 @@ public void createAuthor(@RequestBody AuthorDto authorDto, HttpServletResponse r
 	
 	Preconditions.checkNotNull(authorDto);
 	adminService.createAuthor(authorDto);
-	System.out.println("created Author");
+	logger.debug("Author created");
+	
 }
+
+
+@RequestMapping(value="/updateauthor/", method=RequestMethod.POST)
+@ResponseStatus(value=HttpStatus.CREATED)
+@ResponseBody
+public void updateAuthor(@RequestBody AuthorDto authorDto, HttpServletResponse response){
+	
+	Preconditions.checkNotNull(authorDto);
+	Preconditions.checkArgument((authorDto.getAuthorId()<0));
+	adminService.updateAuthor(authorDto);
+	logger.debug("Author updated");
+	
+
+}
+
 
 @RequestMapping(value="/getAuthor/{id}", method=RequestMethod.GET)
 @ResponseBody
@@ -42,4 +66,16 @@ public AuthorDto findAuthorById(@PathVariable(value="id")final Long id, HttpServ
 		authorDto = adminService.findAuthorById(id);
 	return authorDto;
 }
+
+@RequestMapping(value="getAuthors", method=RequestMethod.GET)
+public List<AuthorDto> findAllAuthors(){
+List<AuthorDto> listAuthors = null;
+
+	listAuthors = adminService.findAllAuthors();
+
+	return listAuthors;
+	
+}
+
+
 }

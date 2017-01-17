@@ -2,6 +2,8 @@ package in.brewcode.api.dto;
 
 public class AuthorDto {
 
+	private Long authorId;
+	
 	private String authorUserName;
 	
 	private String authorEmail;
@@ -21,6 +23,14 @@ public class AuthorDto {
 
 	public void setAuthorEmail(String authorEmail) {
 		this.authorEmail = authorEmail;
+	}
+
+	public Long getAuthorId() {
+		return authorId;
+	}
+
+	public void setAuthorId(Long authorId) {
+		this.authorId = authorId;
 	}
 	
 	

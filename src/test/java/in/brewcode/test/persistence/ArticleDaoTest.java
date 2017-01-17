@@ -1,67 +1,71 @@
 package in.brewcode.test.persistence;
 
 import in.brewcode.api.config.PersistenceConfig;
-import in.brewcode.api.persistence.dao.IAdminAuthorDao;
-import in.brewcode.api.persistence.dao.IArticleDao;
-import in.brewcode.api.persistence.entity.Article;
-import in.brewcode.api.persistence.entity.Author;
-import in.brewcode.api.persistence.entity.Content;
+import in.brewcode.api.dto.ArticleDto;
+import in.brewcode.api.dto.AuthorDto;
+import in.brewcode.api.dto.ContentDto;
+import in.brewcode.api.service.IAdminService;
+import in.brewcode.api.service.IArticleAndContentService;
+import in.brewcode.test.utils.TestUtils;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.log4j.Logger;
-import org.junit.Ignore;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.env.Environment;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.support.AnnotationConfigContextLoader;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.Assert;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(loader = AnnotationConfigContextLoader.class, classes = { PersistenceConfig.class })
 public class ArticleDaoTest {
 	private final Logger log = Logger.getLogger(ArticleDaoTest.class);
 	@Autowired
-	private IArticleDao articleDao;
+	private IAdminService adminService;
 	@Autowired
-	private IAdminAuthorDao adminAuthorDao;
-	
-	@Autowired
-	private Environment env;
+	private IArticleAndContentService articleAndContentService;
 	/**
 	 * Test includes creating Content, Author, Article. And Deleting Article(and
 	 * Cascaded Contents)
 	 */
+	private AuthorDto authorDto;
+	@Before
+	@Transactional
+	public void init(){
+		authorDto = new AuthorDto();
+		String userName = RandomStringUtils.randomAlphabetic(10);
+		authorDto.setAuthorUserName(userName);
+		authorDto.setAuthorEmail(RandomStringUtils.randomAlphanumeric(7)+TestUtils.EMAIL_EXTENSION);
+		adminService.createAuthor(authorDto);
+		
+	}
 	@Test
 	@Transactional
 	public void createArticlewithNoErrors() {
-		final Article article = new Article();
-		final Author author = new Author();
-		author.setAuthorUserName(RandomStringUtils.randomAlphabetic(10));
+		ArticleDto articleDto = new ArticleDto();
 		
+		AuthorDto authorDtoLocal = null;
 		log.debug("before saving author");
-		adminAuthorDao.save(author);
-		article.setArticeName(RandomStringUtils.randomAlphabetic(10));
-		article.setArticleAuthor(author);
-		final Content content = new Content();
-		content.setContentBody("hey a ");
-		content.setArticle(article);
-		List<Content> articleContents = new ArrayList<Content>();
-		articleContents.add(content);
-		article.setArticleContents(articleContents);
+		authorDtoLocal = adminService.findByUserName(authorDto.getAuthorUserName());
+		articleDto.setArticleName(RandomStringUtils.randomAlphabetic(10));
+		articleDto.setArticleAuthorDto(authorDtoLocal);
+		ContentDto contentDto = new ContentDto();
+		contentDto.setContentDtoBody(RandomStringUtils.randomAlphanumeric(50));
+		contentDto.setContentDtoMediaPath(RandomStringUtils.randomAlphabetic(20));
+		List<ContentDto> articleContentDtos = new ArrayList<ContentDto>();
+		articleContentDtos.add(contentDto);
+		articleDto.setArticleContentDtos(articleContentDtos);
 		log.debug("before saving article");
-		articleDao.save(article);
+		articleAndContentService.saveArticle(articleDto);
 	
-		List<Article> topfive = articleDao.getTopFiveArticles();
-	
-		Assert.notNull(topfive);
-
+	//	articleAndContentService.
+		
 	}
 
 }

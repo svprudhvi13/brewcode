@@ -33,11 +33,11 @@ public class ArticleDto {
 		this.articleDtoId = articleDtoId;
 	}
 
-	public String getArticeName() {
+	public String getArticleName() {
 		return articleName;
 	}
 
-	public void setArticeName(String articeName) {
+	public void setArticleName(String articeName) {
 		this.articleName = articeName;
 	}
 
