@@ -1,9 +1,7 @@
 package in.brewcode.api.service.impl;
 
-import in.brewcode.api.dto.ArticleDto;
 import in.brewcode.api.dto.AuthorDto;
 import in.brewcode.api.persistence.dao.IAdminAuthorDao;
-import in.brewcode.api.persistence.entity.Article;
 import in.brewcode.api.persistence.entity.Author;
 import in.brewcode.api.persistence.entity.Privilege;
 import in.brewcode.api.persistence.entity.Role;
@@ -11,7 +9,6 @@ import in.brewcode.api.service.IAdminService;
 import in.brewcode.api.service.common.AuthorEntityConvertor;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -91,14 +88,13 @@ public class AdminService extends AuthorEntityConvertor implements
 	 * 
 	 * @see in.brewcode.api.service.IAdminService#findAllAuthors()
 	 */
-	@SuppressWarnings("unchecked")
 	public List<AuthorDto> findAllAuthors() {
 		List<AuthorDto> listAuthorDtos = null;
-		Iterator<Author> listAuthors = (Iterator<Author>) getAdminAuthorDao().findAll();
+		List<Author> listAuthors = (List<Author>) getAdminAuthorDao().findAll();
 		if (listAuthors != null) {
 			listAuthorDtos = new ArrayList<AuthorDto>();
-			while(listAuthors.hasNext()) {
-				listAuthorDtos.add(convertToArticleAuthorDto(listAuthors.next()));
+			for(Author a : listAuthors) {
+				listAuthorDtos.add(convertToArticleAuthorDto(a));
 			}
 		}
 		return listAuthorDtos;

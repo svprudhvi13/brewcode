@@ -1,14 +1,10 @@
 package in.brewcode.api.persistence.entity;
 
 import java.io.Serializable;
-import java.util.Set;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.Id;
-import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.Where;
@@ -29,23 +25,12 @@ public class Privilege implements Serializable {
 	@Column(name="IS_ACTIVE")
 	private char isActive;
 	
-	@ManyToMany(mappedBy="rolePrivileges", fetch=FetchType.LAZY, cascade=CascadeType.ALL)
-	private Set<Role> rolesWithThisPrivilege;
-	
 	public int getId() {
 		return id;
 	}
 
 	public void setId(int id) {
 		this.id = id;
-	}
-
-	public Set<Role> getRolesWithThisPrivilege() {
-		return rolesWithThisPrivilege;
-	}
-
-	public void setRolesWithThisPrivilege(Set<Role> rolesWithThisPrivilege) {
-		this.rolesWithThisPrivilege = rolesWithThisPrivilege;
 	}
 
 	public String getPrivilegeName() {
