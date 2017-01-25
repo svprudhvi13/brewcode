@@ -68,7 +68,7 @@ public AuthorDto findAuthorById(@PathVariable(value="id")final Long id, HttpServ
 	return authorDto;
 }
 
-@PreAuthorize("hasRole('ROLE_ADMIN')")
+@PreAuthorize("hasRole('ADMIN')")
 @RequestMapping(value="getAuthors", method=RequestMethod.GET)
 @ResponseBody
 public List<AuthorDto> findAllAuthors(){

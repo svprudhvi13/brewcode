@@ -36,7 +36,7 @@ public class ArticleController extends BaseController {
 	 * Lazy fetch, article contents and author
 	 * @return
 	 */
-	@PreAuthorize("hasRole('USER')")
+	@PreAuthorize("hasRole('ROLE_USER')")
 	@RequestMapping( method=RequestMethod.GET)
 	@ResponseBody
 	public  List<ArticleDto> getAllArticles() {

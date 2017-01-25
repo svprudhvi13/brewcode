@@ -3,16 +3,20 @@ package in.brewcode.api.dto;
 import java.sql.Date;
 import java.util.List;
 
-public class ArticleDto {
+import javax.validation.constraints.NotNull;
 
+public class ArticleDto {
+	
+	
 	private long articleDtoId;
 
-	
+	@NotNull
 	private String articleName;
 
 	
 	private String articleDtoImageLocation;
-
+	
+	
 	private Date articleDtoCreatedDate;
 
 	private Date articleDtoLastEditedDate;
@@ -20,7 +24,8 @@ public class ArticleDto {
 	private Date articleDtoPublishedDate;
 
 	private char isActive;
-
+	
+	@NotNull
 	private AuthorDto articleAuthorDto;
 
 	private List<ContentDto> articleContentDtos;

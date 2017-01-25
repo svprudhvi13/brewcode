@@ -13,6 +13,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.oauth2.provider.ClientDetailsService;
+import org.springframework.security.oauth2.provider.ClientRegistrationService;
 import org.springframework.security.oauth2.provider.client.JdbcClientDetailsService;
 import org.springframework.security.oauth2.provider.token.DefaultTokenServices;
 import org.springframework.security.oauth2.provider.token.TokenStore;
@@ -78,5 +79,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
 			//.and().formLogin().permitAll()
 			;
 	}*/
-	
+	/**
+	 * Used for client registration, but defined here
+	 */
+	@Bean
+	public ClientRegistrationService clientRegistrationService(){
+		return new JdbcClientDetailsService(dataSource);
+	}
 }
