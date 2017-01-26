@@ -2,13 +2,27 @@ package in.brewcode.api.dto;
 
 import java.sql.Date;
 
+import javax.validation.constraints.NotNull;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 public class AuthorRegistrationDto extends AuthorLoginDto {
+	@NotNull
 	private String adminFirstName;
+	@NotNull
 	private String adminLastName;
+	@NotNull
 	private Date adminDateOfBirth;
+	
 	private Date adminCreatedDate;
+	
 	private Date adminExpiryDate;
-	private String adminEmail;
+	
+	private AuthorLoginDto authorLoginDto;
+	@NotNull
+	@JsonIgnore
+	@org.codehaus.jackson.annotate.JsonIgnore
+	private String confirmPassword;
 
 	public Date getAdminDateOfBirth() {
 		return adminDateOfBirth;
@@ -18,13 +32,7 @@ public class AuthorRegistrationDto extends AuthorLoginDto {
 		this.adminDateOfBirth = adminDateOfBirth;
 	}
 
-	public String getAdminEmail() {
-		return adminEmail;
-	}
 
-	public void setAdminEmail(String adminEmail) {
-		this.adminEmail = adminEmail;
-	}
 
 	public String getAdminFirstName() {
 		return adminFirstName;
@@ -46,13 +54,7 @@ public class AuthorRegistrationDto extends AuthorLoginDto {
 	 * * All Details of this class, along with adminName ie., unique user id of
 	 * super class is show by this method
 	 */
-	@Override
-	public String toString() {
-		return "BrewcodeAdminDetails [adminFirstName=" + adminFirstName
-				+ ", adminLastName=" + adminLastName + ", adminDateOfBirth="
-				+ adminDateOfBirth + ", adminEmail=" + adminEmail
-				+  "]";
-	}
+	
 
 	public Date getAdminExpiryDate() {
 		return adminExpiryDate;
@@ -68,6 +70,22 @@ public class AuthorRegistrationDto extends AuthorLoginDto {
 
 	public void setAdminCreatedDate(Date adminCreatedDate) {
 		this.adminCreatedDate = adminCreatedDate;
+	}
+
+	public String getConfirmPassword() {
+		return confirmPassword;
+	}
+
+	public void setConfirmPassword(String confirmPassword) {
+		this.confirmPassword = confirmPassword;
+	}
+
+	public AuthorLoginDto getAuthorLoginDto() {
+		return authorLoginDto;
+	}
+
+	public void setAuthorLoginDto(AuthorLoginDto authorLoginDto) {
+		this.authorLoginDto = authorLoginDto;
 	}
 
 }

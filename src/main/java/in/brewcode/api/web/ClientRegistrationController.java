@@ -11,13 +11,19 @@ import org.springframework.security.oauth2.provider.ClientDetails;
 import org.springframework.security.oauth2.provider.ClientDetailsService;
 import org.springframework.security.oauth2.provider.ClientRegistrationService;
 import org.springframework.security.oauth2.provider.client.BaseClientDetails;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 import com.google.common.base.Preconditions;
 
-@RequestMapping(value="/client")
+
+@Controller
+@RequestMapping("/client")
 public class ClientRegistrationController extends BaseController{
 
 	@Autowired
@@ -26,36 +32,37 @@ public class ClientRegistrationController extends BaseController{
 	@Autowired
 	private ClientRegistrationService clientRegistrationService;
 	
-	@PreAuthorize("#oauth2.hasScope('register_client')")
+//	@PreAuthorize("#oauth2.hasScope('register_client')")
 	@RequestMapping(value="/register", method=RequestMethod.POST)
 	@ResponseStatus(value=HttpStatus.CREATED)
-	public void registerClient(BaseClientDetails clientDetails){
+	public void registerClient(@RequestBody BaseClientDetails clientDetails){
 		
 		Preconditions.checkNotNull(clientDetails);
 		
 		clientRegistrationService.addClientDetails(clientDetails);
 	}
 
-	@PreAuthorize("#oauth2.hasScope('brewcode')")
+	@PreAuthorize("#oauth2.hasScope('client')")
 	@RequestMapping(value="/update", method=RequestMethod.PUT)
 	@ResponseStatus(value=HttpStatus.OK)
-	public void updateClient(ClientDetails clientDetails){
+	public void updateClient(@RequestBody BaseClientDetails clientDetails){
 		
 		Preconditions.checkNotNull(clientDetails);
 		clientRegistrationService.addClientDetails(clientDetails);
 	}
 	
 	@PreAuthorize("#oauth2.hasScope('client, admin') or hasRole('ADMIN')")
-	@RequestMapping(value="/delete", method=RequestMethod.DELETE)
+	@RequestMapping(value="/delete/{id}", method=RequestMethod.DELETE)
 	@ResponseStatus(value=HttpStatus.OK)
-	public void removeClient(String clientId){
+	public void removeClient(@PathVariable(value="id") String clientId){
 		
 		Preconditions.checkNotNull(clientId);
 		clientRegistrationService.removeClientDetails(clientId);
 	}
 
 	@PreAuthorize("#oauth2.hasScope('admin') and hasRole('ADMIN')")
-	@RequestMapping(value="getAllClients", method=RequestMethod.GET)
+	@RequestMapping(value="/getAllClients", method=RequestMethod.GET)
+	@ResponseBody
 	public List<ClientDetails> getAllClients(){
 		
 		return clientRegistrationService.listClientDetails();

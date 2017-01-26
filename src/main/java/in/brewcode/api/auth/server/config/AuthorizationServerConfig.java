@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.config.annotation.configurers.ClientDetailsServiceConfigurer;
 import org.springframework.security.oauth2.config.annotation.web.configuration.AuthorizationServerConfigurerAdapter;
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableAuthorizationServer;
@@ -33,7 +34,13 @@ public class AuthorizationServerConfig extends
 	@Autowired
 	// @Qualifier("tokenServices")
 	private AuthorizationServerTokenServices tokenServices;
-
+/**
+ * Defined in SecurityConfig
+ * 
+ */
+	@Autowired
+	private PasswordEncoder passwordEncoder;
+	
 	@Autowired
 	private UserDetailsService userDetailsService;
 	/**
@@ -56,7 +63,7 @@ public class AuthorizationServerConfig extends
 	@Override
 	public void configure(AuthorizationServerSecurityConfigurer security)
 			throws Exception {
-		security.tokenKeyAccess("permitAll()").checkTokenAccess(
+		security.passwordEncoder(passwordEncoder).tokenKeyAccess("permitAll()").checkTokenAccess(
 				"isAuthenticated()");
 	}
 
@@ -64,18 +71,6 @@ public class AuthorizationServerConfig extends
 	public void configure(ClientDetailsServiceConfigurer clients)
 			throws Exception {
 		clients.jdbc(dataSource);
-		// .withClientDetails(clientDetailsService);
-		// in memory
-		/*
-		 * clients.inMemory() .withClient("my-trusted-client")
-		 * .authorizedGrantTypes("password", "authorization_code",
-		 * "refresh_token", "implicit") .authorities("ROLE_ADMIN",
-		 * "ROLE_TRUSTED_CLIENT", "USER", "ADMIN") .scopes("read", "write",
-		 * "trust").secret("secret") .accessTokenValiditySeconds(120).// Access
-		 * token is only valid // for 2 minutes.
-		 * refreshTokenValiditySeconds(600);// Refresh token is only valid //
-		 * for 10 minutes.
-		 */
 	}
 
 	@Override
@@ -84,7 +79,8 @@ public class AuthorizationServerConfig extends
 		endpoints.authenticationManager(authenticationManager)
 				// .tokenStore(tokenStore);
 				.userDetailsService(userDetailsService)
-				.tokenServices(tokenServices).reuseRefreshTokens(true);
+				.tokenServices(tokenServices)
+			;
 	}
 
 }

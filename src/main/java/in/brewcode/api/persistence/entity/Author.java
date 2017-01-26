@@ -31,7 +31,6 @@ public class Author extends CommonEntity implements Serializable {
 	@Column(name = "AUTHOR_EMAIL", unique = true)
 	private String authorEmail;
 
-
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "AUTHOR_ROLE_ID")
 	private Role role;
@@ -56,7 +55,7 @@ public class Author extends CommonEntity implements Serializable {
 	 * No argument constructor of this entity / persistent class
 	 */
 	public Author() {
-	super();
+		super();
 	}
 
 	public Long getAuthorId() {

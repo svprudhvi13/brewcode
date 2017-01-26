@@ -43,8 +43,8 @@ public class AdminService extends AuthorEntityConvertor implements
 		}
 	}
 
-	public void deleteAuthor(AuthorDto authorDto) {
-		// TODO Auto-generated method stub
+	public void deleteAuthor(String userName) {
+		//	TODO 
 	}
 
 	public void addNewRole(Role role) {
@@ -67,9 +67,9 @@ public class AdminService extends AuthorEntityConvertor implements
 
 	}
 
-	public AuthorDto findAuthorById(Long id) {
+	public AuthorDto findAuthorByUserName(String userName) {
 		AuthorDto authorDto = null;
-		Author author = getAdminAuthorDao().findOne(id);
+		Author author = adminAuthorDao.findByAuthorUserName(userName);
 
 		Preconditions.checkNotNull(author);
 		authorDto = convertToArticleAuthorDto(author);
@@ -78,7 +78,7 @@ public class AdminService extends AuthorEntityConvertor implements
 	}
 
 	public void updateAuthor(AuthorDto authorDto) {
-		Author author = getAdminAuthorDao().findOne(authorDto.getAuthorId());
+		Author author = adminAuthorDao.findByAuthorUserName(authorDto.getAuthorUserName());
 		getAdminAuthorDao().save(convertToAuthorEntity(authorDto, author));
 
 	}

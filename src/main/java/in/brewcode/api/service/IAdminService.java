@@ -10,7 +10,7 @@ public interface IAdminService {
 	public AuthorDto findByUserName(String userName);
 	public void createAuthor(AuthorDto authorDto);
 	public void updateAuthor(AuthorDto authorDto);
-	public void deleteAuthor(AuthorDto authorDto);
+	public void deleteAuthor(String authorUserName);
 
 	public void addNewRole(Role role);
 
@@ -20,6 +20,5 @@ public interface IAdminService {
 
 	public void deletePrivilege(Privilege privilege);
 	
-	public AuthorDto findAuthorById(Long id);
 	public List<AuthorDto> findAllAuthors();
 }

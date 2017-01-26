@@ -16,6 +16,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -36,7 +37,7 @@ public class ArticleController extends BaseController {
 	 * Lazy fetch, article contents and author
 	 * @return
 	 */
-	@PreAuthorize("hasRole('ROLE_USER')")
+	@PreAuthorize("hasRole('USER')")
 	@RequestMapping( method=RequestMethod.GET)
 	@ResponseBody
 	public  List<ArticleDto> getAllArticles() {
@@ -72,7 +73,7 @@ public class ArticleController extends BaseController {
 
 	@RequestMapping(value = "/content/", method = RequestMethod.PUT )
 	@ResponseStatus(HttpStatus.CREATED)
-	public void addContent(ContentDto contentDto, HttpServletResponse response){
+	public void addContent(@RequestBody ContentDto contentDto, HttpServletResponse response){
 		Preconditions.checkNotNull(contentDto);
 		
 	articleAndContentService.saveContent(contentDto, contentDto.getArticleDtoId());	
@@ -80,6 +81,7 @@ public class ArticleController extends BaseController {
 	}
 	
 	@RequestMapping(value="", method=RequestMethod.POST)
+	@ResponseStatus(HttpStatus.CREATED)
 	public void createArticle(ArticleDto articleDto){
 		Preconditions.checkNotNull(articleDto);
 		

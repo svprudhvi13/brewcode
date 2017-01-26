@@ -25,44 +25,39 @@ import com.google.common.base.Preconditions;
 
 @Service(value = "articleAndContentService")
 @Transactional
-public class ArticleAndContentService extends CommonService implements IArticleAndContentService {
+public class ArticleAndContentService extends CommonService implements
+		IArticleAndContentService {
 
 	private static Logger logger = Logger
 			.getLogger(ArticleAndContentService.class);
-	
-	
+
 	@Autowired
 	private IAdminAuthorDao adminAuthorDao;
-	
+
 	@Autowired
 	private IArticleDao articleDao;
-	
+
 	@Autowired
 	private IContentDao contentDao;
-	
+
 	protected PagingAndSortingRepository<Content, Long> getContentDao() {
 		return contentDao;
 	}
 
-
-	
 	protected PagingAndSortingRepository<Article, Long> getArticleDao() {
 		return articleDao;
 	}
-	
-	protected PagingAndSortingRepository<Author, Long> getAdminAuthorDao(){
+
+	protected PagingAndSortingRepository<Author, Long> getAdminAuthorDao() {
 		return adminAuthorDao;
 	}
-	
+
 	public ContentDto getContentById(long id) {
 		ContentDto contentDto = null;
 		contentDto = convertToContentDto(contentDao.findOne(id));
 
 		return contentDto;
 	}
-
-	
-
 
 	public List<ArticleDto> getTopArticles() {
 
@@ -97,46 +92,48 @@ public class ArticleAndContentService extends CommonService implements IArticleA
 	 * 
 	 */
 	public void updateArticle(ArticleDto articleDto) {
-			
-			Article article = getArticleDao().findOne(articleDto.getArticleDtoId());
-			
-			if(Preconditions.checkNotNull(article!=null)){
+
+		Article article = getArticleDao().findOne(articleDto.getArticleDtoId());
+
+		if (Preconditions.checkNotNull(article != null)) {
 			articleDao.save(converttoArticleEntity(articleDto, article));
-			}
+		}
 	}
-	
+
 	/**
 	 * Write ArticleDto Validation using validators at Controller level
-	 * Conditions:
-	 * Required fields of ArticleDto are: Author, Article name.
+	 * Conditions: Required fields of ArticleDto are: Author, Article name.
 	 * (non-Javadoc)
+	 * 
 	 * @see in.brewcode.api.service.IArticleAndContentService#saveArticle(in.brewcode.api.dto.ArticleDto)
 	 */
 	public void saveArticle(ArticleDto articleDto) {
-		Article article = converttoArticleEntity(articleDto,new Article());
-		
-		Author author = adminAuthorDao.findOne(articleDto.getArticleAuthorDto().getAuthorId());
+		Article article = converttoArticleEntity(articleDto, new Article());
+
+		Author author = adminAuthorDao.findByAuthorUserName(articleDto
+				.getArticleAuthorDto().getAuthorUserName());
 		article.setArticleAuthor(author);
-		if(articleDto.getArticleContentDtos()!=null){
+		if (articleDto.getArticleContentDtos() != null) {
 			List<Content> articleContents = new ArrayList<Content>();
-			for(ContentDto contentDto: articleDto.getArticleContentDtos()){
+			for (ContentDto contentDto : articleDto.getArticleContentDtos()) {
 				Content content = new Content();
 				content.setArticle(article);
-				articleContents.add(convertToContentEntity(contentDto, content));
+				articleContents
+						.add(convertToContentEntity(contentDto, content));
 			}
 		}
-		
+
 		articleDao.save(article);
-		
+
 	}
-	
+
 	/**
-	 * Validate contentDto and articleId(whether such article exist) at Controller level.
-	 * ArticleId is required to avoid improper cascading.
+	 * Validate contentDto and articleId(whether such article exist) at
+	 * Controller level. ArticleId is required to avoid improper cascading.
 	 * 
 	 */
 	public void saveContent(ContentDto contentDto, Long articleId) {
-		
+
 		Article article = articleDao.findOne(articleId);
 		Preconditions.checkNotNull(article);
 		Content content = convertToContentEntity(contentDto, new Content());
@@ -144,17 +141,13 @@ public class ArticleAndContentService extends CommonService implements IArticleA
 		contentDao.save(content);
 	}
 
-
-
-	
 	public void updateContent(ContentDto contentDto) {
-			Content content = getContentDao().findOne(contentDto.getContentDtoId());
-		if(Preconditions.checkNotNull(content!=null)){
+		Content content = getContentDao().findOne(contentDto.getContentDtoId());
+		if (Preconditions.checkNotNull(content != null)) {
 			contentDao.save(convertToContentEntity(contentDto, content));
 		}
-		
+
 	}
-	
 
 	public void deleteContent(long id) {
 		// Todo logic
@@ -179,18 +172,9 @@ public class ArticleAndContentService extends CommonService implements IArticleA
 			}
 
 			articleDto = convertToArticleDto(article);
-			
-			
+
 		}
 		return articleDto;
 	}
-
-
-
-
-
-
-
-
 
 }

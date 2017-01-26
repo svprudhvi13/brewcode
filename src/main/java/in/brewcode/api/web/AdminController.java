@@ -14,71 +14,69 @@ import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 import com.google.common.base.Preconditions;
 
-@Controller(value="adminController")
-@RequestMapping(value="/admin")
+@Controller(value = "adminController")
+@RequestMapping(value = "/admin")
 public class AdminController extends BaseController {
 
-private static Logger logger = Logger.getLogger(AdminController.class);	
+	private static Logger logger = Logger.getLogger(AdminController.class);
 
-@Autowired
-private ApplicationEventPublisher eventPublisher;
-@Autowired
-private IAdminService adminService;
+	@Autowired
+	private ApplicationEventPublisher eventPublisher;
+	@Autowired
+	private IAdminService adminService;
 
-@RequestMapping(value="/createauthor", method=RequestMethod.POST)
-@ResponseStatus(value=HttpStatus.CREATED)
-@ResponseBody
-public void createAuthor(@RequestBody AuthorDto authorDto, HttpServletResponse response){
-	
-	Preconditions.checkNotNull(authorDto);
-	adminService.createAuthor(authorDto);
-	logger.debug("Author created");
-	
-}
+	@RequestMapping(value = "/createauthor", method = RequestMethod.POST)
+	@ResponseStatus(value = HttpStatus.CREATED)
+	@ResponseBody
+	public void createAuthor(@RequestBody AuthorDto authorDto,
+			HttpServletResponse response) {
 
+		Preconditions.checkNotNull(authorDto);
+		adminService.createAuthor(authorDto);
+		logger.debug("Author created");
 
-@RequestMapping(value="/updateauthor/", method=RequestMethod.POST)
-@ResponseStatus(value=HttpStatus.CREATED)
-@ResponseBody
-public void updateAuthor(@RequestBody AuthorDto authorDto, HttpServletResponse response){
-	
-	Preconditions.checkNotNull(authorDto);
-	Preconditions.checkArgument((authorDto.getAuthorId()<0));
-	adminService.updateAuthor(authorDto);
-	logger.debug("Author updated");
-	
+	}
 
-}
+	@RequestMapping(value = "/updateauthor/", method = RequestMethod.POST)
+	@ResponseStatus(value = HttpStatus.CREATED)
+	@ResponseBody
+	public void updateAuthor(@RequestBody AuthorDto authorDto,
+			HttpServletResponse response) {
 
+		Preconditions.checkNotNull(authorDto);
+		adminService.updateAuthor(authorDto);
+		logger.debug("Author updated");
 
-@RequestMapping(value="/getAuthor/{id}", method=RequestMethod.GET)
-@ResponseBody
-public AuthorDto findAuthorById(@PathVariable(value="id")final Long id, HttpServletResponse response ){
-	AuthorDto authorDto = null;
-		authorDto = adminService.findAuthorById(id);
-	return authorDto;
-}
+	}
 
-@PreAuthorize("hasRole('ADMIN')")
-@RequestMapping(value="getAuthors", method=RequestMethod.GET)
-@ResponseBody
-public List<AuthorDto> findAllAuthors(){
-List<AuthorDto> listAuthors = null;
+	@RequestMapping(value = "/getAuthor/?username={userName}", method = RequestMethod.GET)
+	@ResponseBody
+	public AuthorDto findAuthorByUserName(
+			@RequestParam(value = "username") final String username) {
+		AuthorDto authorDto = null;
+		authorDto = adminService.findByUserName(username);
+		return authorDto;
+	}
 
-	listAuthors = adminService.findAllAuthors();
+	@PreAuthorize("hasRole('ADMIN')")
+	@RequestMapping(value = "getAuthors", method = RequestMethod.GET)
+	@ResponseBody
+	public List<AuthorDto> findAllAuthors() {
+		List<AuthorDto> listAuthors = null;
 
-	return listAuthors;
-	
-}
+		listAuthors = adminService.findAllAuthors();
 
+		return listAuthors;
+
+	}
 
 }

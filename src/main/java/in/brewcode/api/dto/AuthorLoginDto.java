@@ -1,10 +1,18 @@
 package in.brewcode.api.dto;
 
+import javax.validation.constraints.NotNull;
 
-public class AuthorLoginDto extends AuthorDto {
-	
-	
-	
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
+public class AuthorLoginDto {
+	/**
+	 * This field encapsulates username and email
+	 */
+	@NotNull
+	private AuthorDto authorDto;
+	@NotNull
+	@JsonIgnore
+	@org.codehaus.jackson.annotate.JsonIgnore
 	private String adminPassword;
 
 	public String getAdminPassword() {
@@ -13,6 +21,14 @@ public class AuthorLoginDto extends AuthorDto {
 
 	public void setAdminPassword(String adminPassword) {
 		this.adminPassword = adminPassword;
+	}
+
+	public AuthorDto getAuthorDto() {
+		return authorDto;
+	}
+
+	public void setAuthorDto(AuthorDto authorDto) {
+		this.authorDto = authorDto;
 	}
 
 	// Shalln't retreive Password

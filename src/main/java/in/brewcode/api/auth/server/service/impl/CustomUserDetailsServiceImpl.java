@@ -1,6 +1,8 @@
 package in.brewcode.api.auth.server.service.impl;
 
 import in.brewcode.api.auth.server.service.CustomUserDetailsService;
+import in.brewcode.api.dto.AuthorRegistrationDto;
+import in.brewcode.api.exception.UserAlreadyExistsException;
 import in.brewcode.api.persistence.dao.IAdminAuthorDao;
 
 import java.util.ArrayList;
@@ -15,7 +17,9 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-@Service(value="userDetailsService")
+import com.google.common.base.Preconditions;
+
+@Service(value = "userDetailsService")
 @Transactional
 public class CustomUserDetailsServiceImpl implements CustomUserDetailsService {
 
@@ -31,17 +35,61 @@ public class CustomUserDetailsServiceImpl implements CustomUserDetailsService {
 
 		// Author author = adminAuthorDao.findByAuthorUserName(username);
 		// author.getRole().getRolePrivileges();
-		
-		
+
 		List<GrantedAuthority> listRoles = new ArrayList<GrantedAuthority>();
-		
+
 		SimpleGrantedAuthority role = new SimpleGrantedAuthority("ADMIN");
-		//SimpleGrantedAuthority rol2 = new SimpleGrantedAuthority("USER");
+		SimpleGrantedAuthority rol2 = new SimpleGrantedAuthority("USER");
 		listRoles.add(role);
-		//listRoles.add(rol2);
-		UserDetails user = new User("john", "password",true, true, true, true,listRoles );
+		listRoles.add(rol2);
+		UserDetails user = new User("john", "password", true, true, true, true,
+				listRoles);
 		return user;
 
 	}
 
+	public void registerUser(AuthorRegistrationDto authorRegistrationDto)
+			throws UserAlreadyExistsException {
+		if (!(checkIfUserEmailAlreadyExists(authorRegistrationDto
+				.getAuthorDto().getAuthorEmail()) || checkIfUserNameAlreadyExists(authorRegistrationDto
+				.getAuthorDto().getAuthorUserName()))) {
+
+		} else {
+			throw new UserAlreadyExistsException(
+					"User name or email already exists");
+		}
+
+	}
+
+	public void updateUser(AuthorRegistrationDto authorRegistrationDto) {
+
+	}
+
+	public void resetPassword(String userNameOrEmail, String password) {
+
+	}
+
+	/**
+	 * This method return true if username exists already
+	 * 
+	 * @param userName
+	 * @return
+	 */
+	private boolean checkIfUserNameAlreadyExists(String userName) {
+		Preconditions.checkNotNull(userName);
+
+		return (adminAuthorDao.findByAuthorUserName(userName) != null);
+	}
+
+	/**
+	 * This method return true if username exists already
+	 * 
+	 * @param userName
+	 * @return
+	 */
+	private boolean checkIfUserEmailAlreadyExists(String email) {
+		Preconditions.checkNotNull(email);
+
+		return (adminAuthorDao.findByAuthorEmail(email) != null);
+	}
 }

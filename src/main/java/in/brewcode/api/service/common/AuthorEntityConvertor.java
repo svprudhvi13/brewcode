@@ -14,7 +14,6 @@ public class AuthorEntityConvertor {
 		 */
 		if (Preconditions.checkNotNull(articleAuthor != null)) {
 			authorDto = new AuthorDto();
-			authorDto.setAuthorId(articleAuthor.getAuthorId());
 			authorDto.setAuthorUserName(articleAuthor.getAuthorUserName());
 			authorDto.setAuthorEmail(articleAuthor.getAuthorEmail());
 
