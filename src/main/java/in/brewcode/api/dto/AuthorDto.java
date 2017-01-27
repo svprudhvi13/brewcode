@@ -9,7 +9,6 @@ public class AuthorDto {
 	
 	private String authorEmail;
 	
-	
 	public String getAuthorUserName() {
 		return authorUserName;
 	}
@@ -25,6 +24,7 @@ public class AuthorDto {
 	public void setAuthorEmail(String authorEmail) {
 		this.authorEmail = authorEmail;
 	}
+
 
 
 

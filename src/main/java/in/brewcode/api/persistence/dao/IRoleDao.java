@@ -1,8 +1,12 @@
 package in.brewcode.api.persistence.dao;
 
-import in.brewcode.api.persistence.dao.common.IOperationsDao;
 import in.brewcode.api.persistence.entity.Role;
 
-public interface IRoleDao extends IOperationsDao<Role> {
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
+@Repository
+public interface IRoleDao extends JpaRepository<Role, Long> {
+
+	public Role findByRoleNameIgnoreCase(String roleName);
 }

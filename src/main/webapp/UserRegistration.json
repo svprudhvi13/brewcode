@@ -1,0 +1,19 @@
+{
+   "adminFirstName":"Paul",
+   "adminLastName":"Scholes",
+   "adminDateOfBirth":"",
+   "adminCreatedDate":"",
+   "address":"Manchester",
+   "confirmPassword":"password",
+   "adminExpiryDate":"",
+  	"authorLoginDto":{
+  	"authorDto":{
+  	"authorUserName":"scholes18",
+  	"authorEmail":"pscholes18@gmail.com"
+  	},
+  	"adminPassword":"password",
+  	"authorMobileNumber":"9889889880"
+  	
+  	}
+  }
+  

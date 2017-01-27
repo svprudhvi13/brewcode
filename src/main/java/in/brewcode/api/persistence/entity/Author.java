@@ -12,6 +12,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
+import javax.persistence.PrePersist;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.Where;
@@ -28,13 +30,62 @@ public class Author extends CommonEntity implements Serializable {
 	@Column(name = "AUTHOR_USER_NAME", unique = true)
 	private String authorUserName;
 
+	@Column(name = "AUTHOR_PASSWORD")
+	private String password;
+
+	@Column(name = "IS_LOCKED")
+	private char isLocked;
+
 	@Column(name = "AUTHOR_EMAIL", unique = true)
 	private String authorEmail;
+
+	@Column(name = "AUTHOR_MOBILE_NUMBER")
+	private String mobileNumber;
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "AUTHOR_ROLE_ID")
 	private Role role;
+/*
+	@OneToOne(optional = false, fetch = FetchType.LAZY)
+	private PersonalDetails personalDetails;
 
+*/	@PrePersist
+	private void init() {
+		setIsLocked('Y');
+	}
+
+	public String getPassword() {
+		return password;
+	}
+
+	public char getIsLocked() {
+		return isLocked;
+	}
+
+	public void setIsLocked(char isLocked) {
+		this.isLocked = isLocked;
+	}
+
+	public void setPassword(String password) {
+		this.password = password;
+	}
+
+	public String getMobileNumber() {
+		return mobileNumber;
+	}
+
+	public void setMobileNumber(String mobileNumber) {
+		this.mobileNumber = mobileNumber;
+	}
+
+/*	public PersonalDetails getPersonalDetails() {
+		return personalDetails;
+	}
+
+	public void setPersonalDetails(PersonalDetails personalDetails) {
+		this.personalDetails = personalDetails;
+	}
+*/
 	public String getAuthorEmail() {
 		return authorEmail;
 	}

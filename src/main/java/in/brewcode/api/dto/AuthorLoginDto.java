@@ -10,11 +10,15 @@ public class AuthorLoginDto {
 	 */
 	@NotNull
 	private AuthorDto authorDto;
-	@NotNull
+	/*@NotNull
 	@JsonIgnore
 	@org.codehaus.jackson.annotate.JsonIgnore
-	private String adminPassword;
-
+	*/private String adminPassword;
+	/*
+	@JsonIgnore
+	@org.codehaus.jackson.annotate.JsonIgnore
+	*/private String authorMobileNumber;
+	
 	public String getAdminPassword() {
 		return adminPassword;
 	}
@@ -29,6 +33,14 @@ public class AuthorLoginDto {
 
 	public void setAuthorDto(AuthorDto authorDto) {
 		this.authorDto = authorDto;
+	}
+
+	public String getAuthorMobileNumber() {
+		return authorMobileNumber;
+	}
+
+	public void setAuthorMobileNumber(String authorMobileNumber) {
+		this.authorMobileNumber = authorMobileNumber;
 	}
 
 	// Shalln't retreive Password

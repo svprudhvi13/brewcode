@@ -23,7 +23,7 @@ import org.springframework.security.oauth2.provider.token.store.JdbcTokenStore;
 
 @EnableWebSecurity
 @Configuration
-@ComponentScan(basePackages = { "in.brewcode.api.auth" })
+@ComponentScan(basePackages = { "in.brewcode.api.auth"})
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	
 	/**
@@ -91,7 +91,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	public void globalUserDetails(final AuthenticationManagerBuilder auth)
 			throws Exception {
 		// @formatter:off
-		auth.userDetailsService(userDetailsService);
+		auth.userDetailsService(userDetailsService)
+		.passwordEncoder(getPasswordEncoder());
 		// .jdbcAuthentication().dataSource(dataSource);
 		// .inMemoryAuthentication().withUser("john").password("123").roles("USER").and().withUser("tom")
 		// .password("111").roles("ADMIN");

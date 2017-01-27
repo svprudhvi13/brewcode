@@ -1,5 +1,9 @@
 package in.brewcode.api.service.impl;
 
+import static in.brewcode.api.service.common.ServiceUtils.convertToArticleDto;
+import static in.brewcode.api.service.common.ServiceUtils.convertToContentDto;
+import static in.brewcode.api.service.common.ServiceUtils.convertToContentEntity;
+import static in.brewcode.api.service.common.ServiceUtils.converttoArticleEntity;
 import in.brewcode.api.dto.ArticleDto;
 import in.brewcode.api.dto.ContentDto;
 import in.brewcode.api.persistence.dao.IAdminAuthorDao;
@@ -9,7 +13,6 @@ import in.brewcode.api.persistence.entity.Article;
 import in.brewcode.api.persistence.entity.Author;
 import in.brewcode.api.persistence.entity.Content;
 import in.brewcode.api.service.IArticleAndContentService;
-import in.brewcode.api.service.common.CommonService;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,10 +25,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.google.common.base.Preconditions;
-
 @Service(value = "articleAndContentService")
 @Transactional
-public class ArticleAndContentService extends CommonService implements
+public class ArticleAndContentService  implements
 		IArticleAndContentService {
 
 	private static Logger logger = Logger

@@ -1,12 +1,12 @@
 package in.brewcode.api.dto;
 
-import java.sql.Date;
+import java.util.Date;
 
 import javax.validation.constraints.NotNull;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
-public class AuthorRegistrationDto extends AuthorLoginDto {
+public class AuthorRegistrationDto {
 	@NotNull
 	private String adminFirstName;
 	@NotNull
@@ -16,12 +16,22 @@ public class AuthorRegistrationDto extends AuthorLoginDto {
 	
 	private Date adminCreatedDate;
 	
+	private String address;
+	
+	public String getAddress() {
+		return address;
+	}
+
+	public void setAddress(String address) {
+		this.address = address;
+	}
+
 	private Date adminExpiryDate;
 	
 	private AuthorLoginDto authorLoginDto;
 	@NotNull
-	@JsonIgnore
-	@org.codehaus.jackson.annotate.JsonIgnore
+/*	@JsonIgnore
+	@org.codehaus.jackson.annotate.JsonIgnore*/
 	private String confirmPassword;
 
 	public Date getAdminDateOfBirth() {

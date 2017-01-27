@@ -9,6 +9,8 @@ import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
@@ -24,29 +26,22 @@ import org.hibernate.annotations.Where;
 public class Role extends CommonEntity implements Serializable{
 	@Id
 	@Column(name="ROLE_ID")
-	private int id;
+	@GeneratedValue(strategy=GenerationType.AUTO)
+	private Long id;
 	
-	@Column(name="ROLE")
-	private int roleName;
+	@Column(name="ROLE", unique=true)
+	private String roleName;
 	
 	@ManyToMany(fetch=FetchType.LAZY, cascade=CascadeType.ALL)
 	@JoinTable(name="T_ROLE_PRIVILEGE_MAPPING", joinColumns={@JoinColumn(name="ROLE_ID")},
 	inverseJoinColumns={@JoinColumn(name="PRIVILEGE_ID")})
 	private Set<Privilege> rolePrivileges;
-	
-	public int getId() {
-		return id;
-	}
 
-	public void setId(int id) {
-		this.id = id;
-	}
-
-	public int getRoleName() {
+	public String getRoleName() {
 		return roleName;
 	}
 
-	public void setRoleName(int roleName) {
+	public void setRoleName(String roleName) {
 		this.roleName = roleName;
 	}
 

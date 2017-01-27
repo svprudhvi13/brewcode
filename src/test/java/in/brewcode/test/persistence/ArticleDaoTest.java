@@ -4,6 +4,7 @@ import in.brewcode.api.config.PersistenceConfig;
 import in.brewcode.api.dto.ArticleDto;
 import in.brewcode.api.dto.AuthorDto;
 import in.brewcode.api.dto.ContentDto;
+import in.brewcode.api.exception.UserAlreadyExistsException;
 import in.brewcode.api.service.IAdminService;
 import in.brewcode.api.service.IArticleAndContentService;
 import in.brewcode.test.utils.TestUtils;
@@ -37,7 +38,7 @@ public class ArticleDaoTest {
 	private AuthorDto authorDto;
 	@Before
 	@Transactional
-	public void init(){
+	public void init() throws UserAlreadyExistsException{
 		authorDto = new AuthorDto();
 		String userName = RandomStringUtils.randomAlphabetic(10);
 		authorDto.setAuthorUserName(userName);

@@ -1,7 +1,10 @@
-	.classpath
-	.eclipse-pmd
-	.project
-	.settings/*
-	./target/*
+
+#ignoring these files from tracking
+
+.classpath
+.eclipse-pmd
+.project
+.settings/*
+/target/*
 
 

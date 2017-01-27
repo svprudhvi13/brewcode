@@ -1,9 +1,13 @@
 package in.brewcode.api.persistence.entity;
 
+import in.brewcode.api.persistence.entity.common.CommonEntity;
+
 import java.io.Serializable;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
@@ -13,25 +17,18 @@ import org.hibernate.annotations.Where;
 @Table(name="T_PRIVILEGE")
 @Where(clause = "IS_ACTIVE = 'Y'")
 
-public class Privilege implements Serializable {
+public class Privilege extends CommonEntity implements Serializable {
 	
 	@Id
 	@Column(name="PRIVILEGE_ID")
-	private int id;
+	@GeneratedValue(strategy=GenerationType.AUTO)
+	private Long id;
 	
 	@Column(name="PRIVILEGE_NAME")
 	private String privilegeName;
 	
-	@Column(name="IS_ACTIVE")
-	private char isActive;
 	
-	public int getId() {
-		return id;
-	}
 
-	public void setId(int id) {
-		this.id = id;
-	}
 
 	public String getPrivilegeName() {
 		return privilegeName;
@@ -40,15 +37,6 @@ public class Privilege implements Serializable {
 	public void setPrivilegeName(String privilegeName) {
 		this.privilegeName = privilegeName;
 	}
-
-	public char getIsActive() {
-		return isActive;
-	}
-
-	public void setIsActive(char isActive) {
-		this.isActive = isActive;
-	}
-	
 	
 	
 }
