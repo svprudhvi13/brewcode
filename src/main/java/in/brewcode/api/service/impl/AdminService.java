@@ -52,17 +52,17 @@ public class AdminService implements IAdminService {
 	}
 
 	public void addPrivilege(PrivilegeDto privilegeDto) throws PrivilegeAlreadyExistsException {
-		Preconditions.checkNotNull(privilegeDto);
+		Preconditions.checkArgument(null!=privilegeDto);
 		Privilege privilege = new Privilege();
 		if(privilegeDao.findByPrivilegeNameIgnoreCase(privilegeDto.getPrivilegeName())==null){
 		privilegeDao.save(convertToPrivilegeEntity(privilegeDto, privilege));}
 		else{
-			throw new PrivilegeAlreadyExistsException("Cannot create duplicate privilege.");
+			throw new PrivilegeAlreadyExistsException("Cannot create a duplicate privilege.");
 		}
 	}
 
 	public void addRole(RoleDto roleDto) throws PrivilegeNotFoundException {
-		Preconditions.checkNotNull(roleDto);
+		Preconditions.checkArgument(null!=roleDto);
 		Role role = convertToRoleEntity(roleDto, new Role());
 		Set<Privilege> rolePrivileges = null;
 		if (roleDto.getPrivileges() != null) {
@@ -81,7 +81,7 @@ public class AdminService implements IAdminService {
 		}
 		roleDao.save(role);
 	}
-
+	
 	public void updateRoleName(String oldRoleName, String newRoleName)
 			throws RoleNotFoundException, RoleAlreadyExistsException {
 		Preconditions.checkArgument(!(oldRoleName == null || oldRoleName == ""
@@ -91,7 +91,7 @@ public class AdminService implements IAdminService {
 		if (roleDao.findByRoleNameIgnoreCase(newRoleName) != null
 				&& !(oldRoleName.equalsIgnoreCase(newRoleName))) {
 			throw new RoleAlreadyExistsException(
-					"Cannot update role name. As already a role with name "
+					"Cannot update role name. Already a role with name "
 							+ newRoleName + " exists");
 		}
 		if (role != null) {
@@ -101,9 +101,39 @@ public class AdminService implements IAdminService {
 			throw new RoleNotFoundException("Invalid role name, " + oldRoleName);
 		}
 	}
+	public void updatePrivilegesOfRole(RoleDto roleDto)
+			throws RoleNotFoundException, PrivilegeNotFoundException {
+		Preconditions.checkArgument(null!=roleDto, "RoleDto input can't be null");
+		Role role = roleDao.findByRoleNameIgnoreCase(roleDto.getRoleName());
+		if(role==null){
+			throw new RoleNotFoundException("Role doesn't exists.");
+		}
+		else{
+			role = convertToRoleEntity(roleDto, role);
+			Set<Privilege> rolePrivileges = null; 
+			if (roleDto.getPrivileges() != null) {
+				rolePrivileges = new HashSet<Privilege>();
+				for (PrivilegeDto pd : roleDto.getPrivileges()) {
+					Privilege privilege = privilegeDao
+							.findByPrivilegeNameIgnoreCase(pd.getPrivilegeName());
+					if (privilege != null) {
+						rolePrivileges.add(privilege);
+					} else {
+						throw new PrivilegeNotFoundException(
+								"Incorrect Set of Privileges");
+					}
+				}
+				role.setRolePrivileges(rolePrivileges);
+			}
+			roleDao.save(role);
+
+			
+		}
+		
+	}
 
 	public void deleteRole(String roleName) throws RoleNotFoundException {
-		Preconditions.checkNotNull(roleName);
+		Preconditions.checkArgument(null!=roleName);
 		Role role = roleDao.findByRoleNameIgnoreCase(roleName);
 		if (role != null) {
 			roleDao.delete(role);
@@ -115,7 +145,7 @@ public class AdminService implements IAdminService {
 
 	public void deletePrivilege(String privilegeName)
 			throws PrivilegeNotFoundException {
-		Preconditions.checkNotNull(privilegeName);
+		Preconditions.checkArgument(null!=privilegeName);
 		Privilege privilege = privilegeDao
 				.findByPrivilegeNameIgnoreCase(privilegeName);
 		if (privilege != null) {
@@ -128,7 +158,7 @@ public class AdminService implements IAdminService {
 	}
 
 	public void createAuthor(AuthorDto authorDto) {
-		Preconditions.checkNotNull(authorDto);
+		Preconditions.checkArgument(null!=authorDto);
 
 		Author author = convertToAuthorEntity(authorDto, new Author());
 
@@ -158,13 +188,14 @@ public class AdminService implements IAdminService {
 		AuthorDto authorDto = null;
 		Author author = adminAuthorDao.findByAuthorUserName(userName);
 
-		Preconditions.checkNotNull(author);
+		Preconditions.checkArgument(null!=author);
 		authorDto = convertToArticleAuthorDto(author);
 
 		return authorDto;
 	}
 
 	public void updateAuthor(AuthorDto authorDto) {
+		Preconditions.checkArgument(authorDto!=null);
 		Author author = adminAuthorDao.findByAuthorUserName(authorDto
 				.getAuthorUserName());
 		getAdminAuthorDao().save(convertToAuthorEntity(authorDto, author));
@@ -218,8 +249,8 @@ public class AdminService implements IAdminService {
 
 	public void removeRoleOfAuthor(String authorUserName, String roleName)
 			throws UserNotFoundException, RoleNotFoundException {
-		Preconditions.checkArgument(!(authorUserName == null
-				|| roleName == null || authorUserName == "" || roleName == ""));
+		Preconditions.checkArgument(null!=authorUserName, authorUserName+" can't be null");
+		Preconditions.checkArgument(null!=roleName, roleName+" can't be null");
 		Author author = adminAuthorDao.findByAuthorUserName(authorUserName);
 		if (author == null) {
 			throw new UserNotFoundException("No user exists with username: "
@@ -241,7 +272,7 @@ public class AdminService implements IAdminService {
 
 	public void deleteAuthor(String authorUserName)
 			throws UserNotFoundException {
-		Preconditions.checkArgument(!(authorUserName == null));
+		Preconditions.checkArgument(null!=authorUserName);
 		Author author = adminAuthorDao.findByAuthorUserName(authorUserName);
 		if (author == null) {
 			throw new UserNotFoundException("No user exists with username: "
@@ -251,5 +282,6 @@ public class AdminService implements IAdminService {
 		}
 
 	}
+
 
 }

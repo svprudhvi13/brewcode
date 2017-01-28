@@ -27,10 +27,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.google.common.base.Preconditions;
+
 @Service(value = "userDetailsService")
 @Transactional
-public class CustomUserDetailsServiceImpl implements
-		CustomUserDetailsService {
+public class CustomUserDetailsServiceImpl implements CustomUserDetailsService {
 
 	@Autowired
 	IAdminAuthorDao adminAuthorDao;
@@ -41,6 +41,9 @@ public class CustomUserDetailsServiceImpl implements
 	@Autowired
 	PasswordEncoder passwordEncoder;
 
+	/**
+	 * Custom method used for getting token and authorizing user by OAuth2
+	 */
 	public UserDetails loadUserByUsername(String username)
 			throws UsernameNotFoundException {
 
@@ -94,10 +97,10 @@ public class CustomUserDetailsServiceImpl implements
 
 	public void registerUser(AuthorRegistrationDto authorRegistrationDto)
 			throws UserAlreadyExistsException {
-		Preconditions.checkNotNull(authorRegistrationDto);
-		AuthorLoginDto authorLoginDto = authorRegistrationDto
-				.getAuthorLoginDto();
-		Preconditions.checkNotNull(authorLoginDto);
+		AuthorLoginDto authorLoginDto = null;
+		Preconditions.checkArgument(null != authorRegistrationDto);
+		authorLoginDto = authorRegistrationDto.getAuthorLoginDto();
+		Preconditions.checkArgument(null != authorLoginDto);
 		if (!(checkIfUserEmailAlreadyExists(authorLoginDto.getAuthorDto()
 				.getAuthorEmail())
 				|| checkIfUserNameAlreadyExists(authorLoginDto.getAuthorDto()
@@ -141,7 +144,7 @@ public class CustomUserDetailsServiceImpl implements
 	 */
 	private PersonalDetails convertToPersonalDetailsEntity(
 			AuthorRegistrationDto ard, PersonalDetails pde) {
-		Preconditions.checkNotNull(ard);
+		Preconditions.checkArgument(null != ard);
 		pde.setAddress(ard.getAddress());
 		pde.setDateOfBirth(ard.getAdminDateOfBirth());
 		pde.setFirstName(ard.getAdminFirstName());
@@ -157,7 +160,7 @@ public class CustomUserDetailsServiceImpl implements
 	 * @return
 	 */
 	private boolean checkIfUserNameAlreadyExists(String userName) {
-		Preconditions.checkNotNull(userName);
+		Preconditions.checkArgument(null != userName);
 
 		return (adminAuthorDao.findByAuthorUserName(userName) != null);
 	}
@@ -169,13 +172,13 @@ public class CustomUserDetailsServiceImpl implements
 	 * @return
 	 */
 	private boolean checkIfUserEmailAlreadyExists(String email) {
-		Preconditions.checkNotNull(email);
+		Preconditions.checkArgument(null != email);
 
 		return (adminAuthorDao.findByAuthorEmail(email) != null);
 	}
 
 	private boolean checkIfUserMobileNumberExists(String mobileNumber) {
-		Preconditions.checkNotNull(mobileNumber);
+		Preconditions.checkArgument(null != mobileNumber);
 		return (adminAuthorDao.findByMobileNumber(mobileNumber) != null);
 	}
 }

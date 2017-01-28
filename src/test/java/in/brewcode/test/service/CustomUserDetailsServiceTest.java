@@ -7,9 +7,10 @@ import in.brewcode.api.dto.AuthorDto;
 import in.brewcode.api.dto.AuthorLoginDto;
 import in.brewcode.api.dto.AuthorRegistrationDto;
 import in.brewcode.api.exception.UserAlreadyExistsException;
-import in.brewcode.api.persistence.entity.PersonalDetails;
 
 import java.util.Date;
+
+import junit.framework.Assert;
 
 import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.Before;
@@ -104,6 +105,13 @@ public class CustomUserDetailsServiceTest {
 	@Test
 	public void getExistingUserDetails_NoError() {
 		UserDetails userDetails = cuds.loadUserByUsername("scholes18");
+	
+	org.springframework.util.Assert.notNull(userDetails, " found");
 	}
-
+	
+	@Test
+	public void whenUserisSavedWithIncomplete_Error() throws UserAlreadyExistsException {
+		AuthorRegistrationDto ard = new AuthorRegistrationDto();
+		cuds.registerUser(ard);
+	}
 }

@@ -35,6 +35,7 @@ public interface IAdminService {
 
 	public void addPrivilege(PrivilegeDto privilege) throws PrivilegeAlreadyExistsException;
 	
+	public void updatePrivilegesOfRole(RoleDto roleDto) throws RoleNotFoundException, PrivilegeNotFoundException;
 //	public void updatePrivilege(PrivilegeDto privilege);
 
 	public void updateRoleName(String oldRoleName, String newRoleName ) throws RoleAlreadyExistsException, RoleNotFoundException;
