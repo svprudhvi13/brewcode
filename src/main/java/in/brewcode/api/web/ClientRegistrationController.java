@@ -32,7 +32,7 @@ public class ClientRegistrationController extends BaseController{
 	@Autowired
 	private ClientRegistrationService clientRegistrationService;
 	
-//	@PreAuthorize("#oauth2.hasScope('register_client')")
+	@PreAuthorize("#oauth2.hasScope('admin_app')")
 	@RequestMapping(value="/register", method=RequestMethod.POST)
 	@ResponseStatus(value=HttpStatus.CREATED)
 	public void registerClient(@RequestBody BaseClientDetails clientDetails){
@@ -51,7 +51,7 @@ public class ClientRegistrationController extends BaseController{
 		clientRegistrationService.addClientDetails(clientDetails);
 	}
 	
-	@PreAuthorize("#oauth2.hasScope('client, admin') or hasRole('ADMIN')")
+	@PreAuthorize("#oauth2.hasScope('client, client, admin_app') or hasRole('ADMIN')")
 	@RequestMapping(value="/delete/{id}", method=RequestMethod.DELETE)
 	@ResponseStatus(value=HttpStatus.OK)
 	public void removeClient(@PathVariable(value="id") String clientId){
@@ -60,7 +60,7 @@ public class ClientRegistrationController extends BaseController{
 		clientRegistrationService.removeClientDetails(clientId);
 	}
 
-	@PreAuthorize("#oauth2.hasScope('admin') and hasRole('ADMIN')")
+	@PreAuthorize("#oauth2.hasScope('admin_app') and hasRole('ADMIN')")
 	@RequestMapping(value="/getAllClients", method=RequestMethod.GET)
 	@ResponseBody
 	public List<ClientDetails> getAllClients(){

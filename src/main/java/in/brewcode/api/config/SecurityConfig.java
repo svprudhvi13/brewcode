@@ -7,6 +7,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
+import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
+import org.springframework.data.repository.query.QueryLookupStrategy.Key;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -24,6 +26,8 @@ import org.springframework.security.oauth2.provider.token.store.JdbcTokenStore;
 @EnableWebSecurity
 @Configuration
 @ComponentScan(basePackages = { "in.brewcode.api.auth"})
+@EnableJpaRepositories(basePackages = "in.brewcode.api.auth.server.dao", queryLookupStrategy = Key.CREATE_IF_NOT_FOUND)
+
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	
 	/**
@@ -40,7 +44,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	
 
 	/**
-	 * Writted seperately to use in UserDetailsService and UserRegistrationService bean
+	 * Written seperately to use in UserDetailsService and UserRegistrationService bean
 	 * as it extends both these interfaces
 	 * */
 	
@@ -49,14 +53,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 		jdbcClientDetailsService.setPasswordEncoder(getPasswordEncoder());
 		return jdbcClientDetailsService;
 	}
-
-	@Bean
-	public AuthenticationManager authenticationManagerBean() throws Exception {
-		AuthenticationManager authenticationManager = super
-				.authenticationManager();
-		return authenticationManager;
-	}
-
 	@Bean
 	public ClientDetailsService getClientDetailsService() {
 		return getJdbcClientDetailsService();
@@ -68,6 +64,14 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
 		return getJdbcClientDetailsService();
 	}
+	@Bean
+	public AuthenticationManager authenticationManagerBean() throws Exception {
+		AuthenticationManager authenticationManager = super
+				.authenticationManager();
+		return authenticationManager;
+	}
+
+
 	@Bean
 	public PasswordEncoder getPasswordEncoder(){
 		return new BCryptPasswordEncoder();

@@ -2,6 +2,7 @@ package in.brewcode.test.config;
 
 import in.brewcode.api.config.PersistenceConfig;
 
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.test.context.ContextConfiguration;
@@ -15,6 +16,7 @@ PersistenceConfig.class
 public class PersistenceConfigTest {
 
 	@Test
+	@Ignore
 	public void testApplicationConfig(){
 		
 	}

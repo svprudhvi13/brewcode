@@ -5,6 +5,7 @@ import static org.junit.Assert.assertNotNull;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.junit.Ignore;
 import org.junit.Test;
 
 import com.jayway.restassured.RestAssured;
@@ -43,6 +44,7 @@ public class TokenRevocationLiveTest {
     }
 	
     @Test
+    @Ignore
     public void givenDBUser_whenRevokeToken_thenAuthorized() {
         final String accessToken = obtainAccessToken("fooClientIdPassword", "john", "password");
         assertNotNull(accessToken);

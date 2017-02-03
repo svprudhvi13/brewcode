@@ -6,6 +6,7 @@ import in.brewcode.api.dto.PrivilegeDto;
 import in.brewcode.api.dto.RoleDto;
 import in.brewcode.api.exception.PrivilegeAlreadyExistsException;
 import in.brewcode.api.exception.PrivilegeNotFoundException;
+import in.brewcode.api.exception.RoleAlreadyExistsException;
 import in.brewcode.api.exception.RoleNotFoundException;
 import in.brewcode.api.exception.UserAlreadyExistsException;
 import in.brewcode.api.exception.UserNotFoundException;
@@ -42,6 +43,15 @@ public class AdminController extends BaseController {
 	@Autowired
 	private IAdminService adminService;
 
+	/**
+	 * No need to use this method. As users register themselves from
+	 * {@link UserRegistrationController}
+	 * 
+	 * @param authorDto
+	 * @param response
+	 * @throws UserAlreadyExistsException
+	 */
+	@PreAuthorize("#oauth2.hasScope('admin_app') and hasRole('ADMIN')")
 	@RequestMapping(value = "/author/create", method = RequestMethod.POST)
 	@ResponseStatus(value = HttpStatus.CREATED)
 	@ResponseBody
@@ -67,6 +77,8 @@ public class AdminController extends BaseController {
 	 * 
 	 * }
 	 */
+
+	@PreAuthorize("#oauth2.hasAnyScope('admin_app') and (hasRole('ADMIN') or hasRole('USER'))")
 	@RequestMapping(value = "/author", method = RequestMethod.GET)
 	@ResponseBody
 	public AuthorDto findAuthorByUserName(
@@ -76,7 +88,7 @@ public class AdminController extends BaseController {
 		return authorDto;
 	}
 
-	@PreAuthorize("hasRole('ADMIN')")
+	@PreAuthorize("#oauth2.hasScope('admin_app') and hasRole('ADMIN')")
 	@RequestMapping(value = "/authors", method = RequestMethod.GET)
 	@ResponseBody
 	public List<AuthorWithRoleDto> findAllAuthors() {
@@ -88,57 +100,105 @@ public class AdminController extends BaseController {
 
 	}
 
+	@PreAuthorize("#oauth2.hasScope('admin_app') and hasRole('ADMIN')")
 	@RequestMapping(value = "/privilege/create", method = RequestMethod.POST)
 	@ResponseStatus(value = HttpStatus.CREATED)
-	public void createPrivilege(@RequestBody PrivilegeDto privilegeDto) {
+	public void createPrivilege(@RequestBody PrivilegeDto privilegeDto)
+			throws PrivilegeAlreadyExistsException {
 		Preconditions.checkNotNull(privilegeDto);
-		try {
-			adminService.addPrivilege(privilegeDto);
-		} catch (PrivilegeAlreadyExistsException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+
+		adminService.addPrivilege(privilegeDto);
+
 	}
 
+	/**
+	 * Method to create role. Though, we can develop a single method to update
+	 * and create role.
+	 * 
+	 * @param roleDto
+	 * @throws PrivilegeNotFoundException
+	 */
+	@PreAuthorize("#oauth2.hasScope('admin_app') and hasRole('ADMIN')")
 	@RequestMapping(value = "/role/create", method = RequestMethod.POST)
 	@ResponseStatus(value = HttpStatus.CREATED)
-	public void createRole(@RequestBody RoleDto roleDto) {
+	public void createRole(@RequestBody RoleDto roleDto)
+			throws PrivilegeNotFoundException {
 		Preconditions.checkNotNull(roleDto);
-		try {
-			adminService.addRole(roleDto);
-		} catch (PrivilegeNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		;
+		adminService.addRole(roleDto);
+
 	}
 
+	/**
+	 * If role doesn't exist, a role is created
+	 * 
+	 * @param roleDto
+	 * @throws RoleNotFoundException
+	 * @throws PrivilegeNotFoundException
+	 */
+	@PreAuthorize("#oauth2.hasScope('admin_app') and hasRole('ADMIN')")
+	@RequestMapping(value = "/role/updateprivileges", method = RequestMethod.POST)
+	@ResponseStatus(value = HttpStatus.CREATED)
+	public void updateRole(@RequestBody RoleDto roleDto)
+			throws RoleNotFoundException, PrivilegeNotFoundException {
+		Preconditions.checkNotNull(roleDto);
+		adminService.updatePrivilegesOfRole(roleDto);
+
+	}
+
+	/**
+	 * Only rolename is updated
+	 * 
+	 * @param roleDto
+	 * @throws RoleAlreadyExistsException
+	 * @throws RoleNotFoundException
+	 * @throws PrivilegeNotFoundException
+	 */
+	@PreAuthorize("#oauth2.hasScope('admin_app') and hasRole('ADMIN')")
+	@RequestMapping(value = "/role/updaterolename", method = RequestMethod.POST)
+	@ResponseStatus(value = HttpStatus.CREATED)
+	public void updateRoleName(String oldRoleName, String newRoleName)
+			throws RoleAlreadyExistsException, RoleNotFoundException {
+		Preconditions.checkArgument(!(oldRoleName == null || oldRoleName == ""
+				|| newRoleName == null || newRoleName == ""),
+				" Old / New Role name cannot be empty");
+		;
+		adminService.updateRoleName(oldRoleName, newRoleName);
+
+	}
+
+	/**
+	 * This method cannot be used. As Author entity inherently used Role as
+	 * child
+	 * 
+	 * @param roleName
+	 * @throws RoleNotFoundException
+	 */
+	@PreAuthorize("#oauth2.hasScope('admin_app') and hasRole('ADMIN')")
 	@RequestMapping(value = "/role/delete", method = RequestMethod.DELETE)
 	@ResponseStatus(value = HttpStatus.OK)
-	public void deleteRole(@RequestParam(value = "rolename") String roleName) {
+	public void deleteRole(@RequestParam(value = "rolename") String roleName)
+			throws RoleNotFoundException {
 		Preconditions.checkNotNull(roleName);
-		try {
-			adminService.deleteRole(roleName);
-		} catch (RoleNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		adminService.deleteRole(roleName);
+
 	}
 
+	/**
+	 * This method is used to assign role.
+	 * 
+	 * @param userName
+	 * @param roleName
+	 * @throws UserNotFoundException
+	 * @throws RoleNotFoundException
+	 */
+	@PreAuthorize("#oauth2.hasScope('admin_app') and hasRole('ADMIN')")
 	@RequestMapping(value = "/author/assignrole", method = RequestMethod.GET)
-	@ResponseStatus(value=HttpStatus.CREATED)
+	@ResponseStatus(value = HttpStatus.CREATED)
 	public void assignRoleToAuthor(
 			@RequestParam(value = "username", required = true) String userName,
-			@RequestParam(value = "role", required = true) String roleName) {
-try {
-	adminService.assignRoletoAuthor(userName, roleName);
-} catch (UserNotFoundException e) {
-	// TODO Auto-generated catch block
-	e.printStackTrace();
-} catch (RoleNotFoundException e) {
-	// TODO Auto-generated catch block
-	e.printStackTrace();
-}
-		
+			@RequestParam(value = "role", required = true) String roleName)
+			throws UserNotFoundException, RoleNotFoundException {
+		adminService.assignRoletoAuthor(userName, roleName);
+
 	}
 }

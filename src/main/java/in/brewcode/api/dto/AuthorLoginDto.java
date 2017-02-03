@@ -10,15 +10,12 @@ public class AuthorLoginDto {
 	 */
 	@NotNull
 	private AuthorDto authorDto;
-	/*@NotNull
-	@JsonIgnore
-	@org.codehaus.jackson.annotate.JsonIgnore
-	*/private String adminPassword;
-	/*
-	@JsonIgnore
-	@org.codehaus.jackson.annotate.JsonIgnore
-	*/private String authorMobileNumber;
+	private String adminPassword;
 	
+	private String authorMobileNumber;
+	@NotNull
+	//@JsonIgnore
+	//@org.codehaus.jackson.annotate.JsonIgnore
 	public String getAdminPassword() {
 		return adminPassword;
 	}
@@ -34,7 +31,9 @@ public class AuthorLoginDto {
 	public void setAuthorDto(AuthorDto authorDto) {
 		this.authorDto = authorDto;
 	}
-
+	@NotNull
+	//@JsonIgnore
+	//@org.codehaus.jackson.annotate.JsonIgnore
 	public String getAuthorMobileNumber() {
 		return authorMobileNumber;
 	}

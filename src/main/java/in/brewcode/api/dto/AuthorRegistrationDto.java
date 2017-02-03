@@ -12,8 +12,11 @@ public class AuthorRegistrationDto {
 	@NotNull
 	private String adminLastName;
 	@NotNull
+	@org.codehaus.jackson.annotate.JsonIgnore
 	private Date adminDateOfBirth;
 	
+	@JsonIgnore
+	@org.codehaus.jackson.annotate.JsonIgnore
 	private Date adminCreatedDate;
 	
 	private String address;
@@ -25,13 +28,9 @@ public class AuthorRegistrationDto {
 	public void setAddress(String address) {
 		this.address = address;
 	}
-
-	private Date adminExpiryDate;
 	
 	private AuthorLoginDto authorLoginDto;
 	@NotNull
-/*	@JsonIgnore
-	@org.codehaus.jackson.annotate.JsonIgnore*/
 	private String confirmPassword;
 
 	public Date getAdminDateOfBirth() {
@@ -65,14 +64,6 @@ public class AuthorRegistrationDto {
 	 * super class is show by this method
 	 */
 	
-
-	public Date getAdminExpiryDate() {
-		return adminExpiryDate;
-	}
-
-	public void setAdminExpiryDate(Date adminExpiryDate) {
-		this.adminExpiryDate = adminExpiryDate;
-	}
 
 	public Date getAdminCreatedDate() {
 		return adminCreatedDate;

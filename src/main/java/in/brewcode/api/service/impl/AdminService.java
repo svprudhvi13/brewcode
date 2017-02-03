@@ -1,6 +1,6 @@
 package in.brewcode.api.service.impl;
 
-import static in.brewcode.api.service.common.ServiceUtils.convertToArticleAuthorDto;
+import static in.brewcode.api.service.common.ServiceUtils.convertToAuthorDto;
 import static in.brewcode.api.service.common.ServiceUtils.convertToAuthorEntity;
 import static in.brewcode.api.service.common.ServiceUtils.convertToPrivilegeEntity;
 import static in.brewcode.api.service.common.ServiceUtils.convertToRoleDto;
@@ -27,6 +27,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.stereotype.Service;
@@ -52,7 +53,7 @@ public class AdminService implements IAdminService {
 	}
 
 	public void addPrivilege(PrivilegeDto privilegeDto) throws PrivilegeAlreadyExistsException {
-		Preconditions.checkArgument(null!=privilegeDto);
+		Preconditions.checkArgument(null!=privilegeDto, "Privilege cannot be null");
 		Privilege privilege = new Privilege();
 		if(privilegeDao.findByPrivilegeNameIgnoreCase(privilegeDto.getPrivilegeName())==null){
 		privilegeDao.save(convertToPrivilegeEntity(privilegeDto, privilege));}
@@ -62,7 +63,7 @@ public class AdminService implements IAdminService {
 	}
 
 	public void addRole(RoleDto roleDto) throws PrivilegeNotFoundException {
-		Preconditions.checkArgument(null!=roleDto);
+		Preconditions.checkArgument(null!=roleDto, " Role cannot be null");
 		Role role = convertToRoleEntity(roleDto, new Role());
 		Set<Privilege> rolePrivileges = null;
 		if (roleDto.getPrivileges() != null) {
@@ -85,7 +86,7 @@ public class AdminService implements IAdminService {
 	public void updateRoleName(String oldRoleName, String newRoleName)
 			throws RoleNotFoundException, RoleAlreadyExistsException {
 		Preconditions.checkArgument(!(oldRoleName == null || oldRoleName == ""
-				|| newRoleName == null || newRoleName == ""));
+				|| newRoleName == null || newRoleName == ""), " Old / New Role name cannot be empty");
 		;
 		Role role = roleDao.findByRoleNameIgnoreCase(oldRoleName);
 		if (roleDao.findByRoleNameIgnoreCase(newRoleName) != null
@@ -105,8 +106,12 @@ public class AdminService implements IAdminService {
 			throws RoleNotFoundException, PrivilegeNotFoundException {
 		Preconditions.checkArgument(null!=roleDto, "RoleDto input can't be null");
 		Role role = roleDao.findByRoleNameIgnoreCase(roleDto.getRoleName());
+		//If update is not possible, create new role.
 		if(role==null){
-			throw new RoleNotFoundException("Role doesn't exists.");
+			//If update is not possible, create new role.
+			//throw new RoleNotFoundException("Role doesn't exists. So, can't update");
+			//Now, instead of updating, a new role is created
+			addRole(roleDto);
 		}
 		else{
 			role = convertToRoleEntity(roleDto, role);
@@ -159,7 +164,7 @@ public class AdminService implements IAdminService {
 
 	public void createAuthor(AuthorDto authorDto) {
 		Preconditions.checkArgument(null!=authorDto);
-
+		
 		Author author = convertToAuthorEntity(authorDto, new Author());
 
 		getAdminAuthorDao().save(author);
@@ -189,7 +194,7 @@ public class AdminService implements IAdminService {
 		Author author = adminAuthorDao.findByAuthorUserName(userName);
 
 		Preconditions.checkArgument(null!=author);
-		authorDto = convertToArticleAuthorDto(author);
+		authorDto = convertToAuthorDto(author);
 
 		return authorDto;
 	}
@@ -210,14 +215,17 @@ public class AdminService implements IAdminService {
 	public List<AuthorWithRoleDto> findAllAuthors() {
 		List<AuthorWithRoleDto> listAuthorWithRoleDto = null;
 		List<Author> listAuthors = (List<Author>) getAdminAuthorDao().findAll();
+		Hibernate.initialize(listAuthors);
 		if (listAuthors != null) {
 			listAuthorWithRoleDto = new ArrayList<AuthorWithRoleDto>();
 			for (Author a : listAuthors) {
-				AuthorDto ad = convertToArticleAuthorDto(a);
+				AuthorDto ad = convertToAuthorDto(a);
 				AuthorWithRoleDto ald = new AuthorWithRoleDto();
 				ald.setAuthorDto(ad);
+				//Authors can have no roles assigned to them. In convertToRole(..), we shall not pass null
+				if(a.getRole()!=null){
 				ald.setRoleDto(convertToRoleDto(a.getRole()));
-				listAuthorWithRoleDto.add(ald);
+				}listAuthorWithRoleDto.add(ald);
 			}
 		}
 		return listAuthorWithRoleDto;
@@ -226,7 +234,7 @@ public class AdminService implements IAdminService {
 	public AuthorDto findByUserName(String userName) {
 
 		Author author = adminAuthorDao.findByAuthorUserName(userName);
-		return convertToArticleAuthorDto(author);
+		return convertToAuthorDto(author);
 	}
 
 	public void assignRoletoAuthor(String authorUserName, String roleName)
@@ -239,7 +247,7 @@ public class AdminService implements IAdminService {
 		}
 		Role role = roleDao.findByRoleNameIgnoreCase(roleName);
 		if (role == null) {
-			throw new RoleNotFoundException(roleName + " not found");
+			throw new RoleNotFoundException(roleName + "role not found");
 		}
 
 		author.setRole(role);

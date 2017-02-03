@@ -32,7 +32,7 @@ public class Role extends CommonEntity implements Serializable{
 	@Column(name="ROLE", unique=true)
 	private String roleName;
 	
-	@ManyToMany(fetch=FetchType.LAZY, cascade=CascadeType.ALL)
+	@ManyToMany(fetch=FetchType.EAGER, cascade=CascadeType.ALL)
 	@JoinTable(name="T_ROLE_PRIVILEGE_MAPPING", joinColumns={@JoinColumn(name="ROLE_ID")},
 	inverseJoinColumns={@JoinColumn(name="PRIVILEGE_ID")})
 	private Set<Privilege> rolePrivileges;

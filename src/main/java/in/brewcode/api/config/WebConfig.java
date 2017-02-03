@@ -1,13 +1,69 @@
 package in.brewcode.api.config;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.MediaType;
+import org.springframework.http.converter.ByteArrayHttpMessageConverter;
+import org.springframework.http.converter.HttpMessageConverter;
+import org.springframework.security.web.bind.support.AuthenticationPrincipalArgumentResolver;
+import org.springframework.web.multipart.commons.CommonsMultipartResolver;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
 @Configuration
 @EnableWebMvc
 @ComponentScan(basePackages = "in.brewcode.api.web")
-public class WebConfig extends WebMvcConfigurerAdapter{
-//
+public class WebConfig extends WebMvcConfigurerAdapter {
+	/**
+	 * Configured to support multipart streams
+	 */
+	@Override
+	public void extendMessageConverters(
+			final List<HttpMessageConverter<?>> converters) {
+		converters.add(byteArrayHttpMessageConverter());
+
+	}
+
+	/**
+     * Configured to user @AuthenticationPrincipal annotation
+     */
+	@Override
+	public void addArgumentResolvers(
+			java.util.List<org.springframework.web.method.support.HandlerMethodArgumentResolver> argumentResolvers) {
+		argumentResolvers.add(getAuthenticationPrincipalArgumentResolver());
+	}
+
+	@Bean
+	@Qualifier("multipartResolver")
+	public CommonsMultipartResolver getMultipartResolver() {
+		CommonsMultipartResolver multipartResolver = new CommonsMultipartResolver();
+		multipartResolver.setMaxUploadSize(100000000);
+		return multipartResolver;
+	}
+
+	@Bean
+	public ByteArrayHttpMessageConverter byteArrayHttpMessageConverter() {
+		final ByteArrayHttpMessageConverter arrayHttpMessageConverter = new ByteArrayHttpMessageConverter();
+		arrayHttpMessageConverter
+				.setSupportedMediaTypes(getSupportedMediaTypes());
+
+		return arrayHttpMessageConverter;
+	}
+
+	@Bean
+	public AuthenticationPrincipalArgumentResolver getAuthenticationPrincipalArgumentResolver(){
+		return new AuthenticationPrincipalArgumentResolver();
+	}
+	private List<MediaType> getSupportedMediaTypes() {
+		final List<MediaType> list = new ArrayList<MediaType>();
+		list.add(MediaType.IMAGE_JPEG);
+		list.add(MediaType.IMAGE_PNG);
+		list.add(MediaType.ALL);
+		return list;
+	}
 }

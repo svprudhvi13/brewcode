@@ -1,14 +1,16 @@
 package in.brewcode.api.dto;
 
+import javax.validation.constraints.NotNull;
 
 public class AuthorDto {
 
-	
 	private String authorUserName;
-	
-	
+
 	private String authorEmail;
-	
+
+	@NotNull
+	//@JsonIgnore
+	//@org.codehaus.jackson.annotate.JsonIgnore
 	public String getAuthorUserName() {
 		return authorUserName;
 	}
@@ -17,6 +19,9 @@ public class AuthorDto {
 		this.authorUserName = authorUserName;
 	}
 
+	@NotNull
+	//@JsonIgnore
+	//@org.codehaus.jackson.annotate.JsonIgnore
 	public String getAuthorEmail() {
 		return authorEmail;
 	}
@@ -24,8 +29,5 @@ public class AuthorDto {
 	public void setAuthorEmail(String authorEmail) {
 		this.authorEmail = authorEmail;
 	}
-
-
-
 
 }

@@ -35,7 +35,7 @@ public class PersonalDetails extends CommonEntity{
 	@Column(name="ADDRESS")
 	private String address;
 	
-	@OneToOne(optional=false, fetch=FetchType.LAZY)
+	@OneToOne(optional=false, fetch=FetchType.EAGER)
 	@JoinColumn(name="USER_ID")
 	private Author author;
 	public String getFirstName() {

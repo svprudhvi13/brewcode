@@ -1,18 +1,21 @@
 package in.brewcode.api.service.common;
 
-import java.util.HashSet;
-import java.util.Set;
-
 import in.brewcode.api.dto.ArticleDto;
 import in.brewcode.api.dto.AuthorDto;
+import in.brewcode.api.dto.AuthorLoginDto;
+import in.brewcode.api.dto.AuthorRegistrationDto;
 import in.brewcode.api.dto.ContentDto;
 import in.brewcode.api.dto.PrivilegeDto;
 import in.brewcode.api.dto.RoleDto;
 import in.brewcode.api.persistence.entity.Article;
 import in.brewcode.api.persistence.entity.Author;
 import in.brewcode.api.persistence.entity.Content;
+import in.brewcode.api.persistence.entity.PersonalDetails;
 import in.brewcode.api.persistence.entity.Privilege;
 import in.brewcode.api.persistence.entity.Role;
+
+import java.util.HashSet;
+import java.util.Set;
 
 import com.google.common.base.Preconditions;
 
@@ -123,28 +126,75 @@ public class ServiceUtils {
 
 		}
 		return contentDto;
+		
 	}
-
-	public static AuthorDto convertToArticleAuthorDto(Author articleAuthor) {
+	
+	public static AuthorRegistrationDto convertToAuthorRegistrationDto(PersonalDetails personalDetails){
+		AuthorRegistrationDto authorRegistrationDto = null;
+		Preconditions.checkArgument(personalDetails!=null);
+		authorRegistrationDto = new AuthorRegistrationDto();
+		authorRegistrationDto.setAddress(personalDetails.getAddress());
+		authorRegistrationDto.setAdminCreatedDate(personalDetails.getCreateDate());
+		authorRegistrationDto.setAdminDateOfBirth(personalDetails.getDateOfBirth());
+		authorRegistrationDto.setAdminFirstName(personalDetails.getFirstName());
+		authorRegistrationDto.setAdminLastName(personalDetails.getLastName());
+		authorRegistrationDto.setAuthorLoginDto(convertToAuthorLoginDto(personalDetails.getAuthor()));
+		//No need to setConfirmPassword of AuthorRegistrationDto
+		return authorRegistrationDto;
+	}
+	public static AuthorLoginDto convertToAuthorLoginDto(Author author){
+		AuthorLoginDto authorLoginDto = null;
+		Preconditions.checkArgument(author!=null);
+		authorLoginDto = new AuthorLoginDto();
+		
+		//To set AuthorDto of AuthorLoginDto from Author
+		AuthorDto authorDto=convertToAuthorDto(author);
+		authorLoginDto.setAuthorDto(authorDto);
+		
+		//Set mobile number Article Entity
+		authorLoginDto.setAuthorMobileNumber(author.getMobileNumber());
+		
+		return authorLoginDto;
+	}
+	public static AuthorDto convertToAuthorDto(Author articleAuthor) {
 		AuthorDto authorDto = null;
 		/*
-		 * Only author user name is set here
+		 * Only author user name and email is set here
 		 */
-		if (Preconditions.checkNotNull(articleAuthor != null)) {
+		Preconditions.checkArgument(articleAuthor != null);
 			authorDto = new AuthorDto();
 			authorDto.setAuthorUserName(articleAuthor.getAuthorUserName());
 			authorDto.setAuthorEmail(articleAuthor.getAuthorEmail());
 
-		}
+		
 
 		return authorDto;
 	}
 
 	public static Author convertToAuthorEntity(AuthorDto authorDto, Author author) {
-		
+		Preconditions.checkArgument(authorDto!=null, "AuthorDto cannot be converted. As it is empty");
+		Preconditions.checkArgument(author!=null, "Author entity passed should not be null");
 		author.setAuthorUserName(authorDto.getAuthorUserName());
 		author.setAuthorEmail(authorDto.getAuthorEmail());
 		return author;
+	}
+	/**
+	 * Doesn't convert {@link Author} field of {@link AuthorRegistrationDto}
+	 * 
+	 * @param ard
+	 * @param pde
+	 * @return
+	 */
+	public static PersonalDetails convertToPersonalDetailsEntity(
+			AuthorRegistrationDto ard, PersonalDetails pde) {
+		Preconditions.checkArgument(null != ard, "Personal Details cannot be empty");
+		Preconditions.checkArgument(ard!=null, "PersonalDetails entity cannot be empty");
+		pde.setAddress(ard.getAddress());
+		pde.setDateOfBirth(ard.getAdminDateOfBirth());
+		pde.setFirstName(ard.getAdminFirstName());
+		pde.setLastName(ard.getAdminLastName());
+
+		return pde;
 	}
 
 	public static Role convertToRoleEntity(RoleDto roleDto, Role role) {

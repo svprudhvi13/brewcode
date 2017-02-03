@@ -2,14 +2,11 @@ package in.brewcode.test.service;
 
 import in.brewcode.api.config.PersistenceConfig;
 
-import java.net.URI;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Map;
 
-import org.apache.http.client.utils.URIBuilder;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,6 +27,7 @@ public class ClientDetailsServiceTest {
 	ClientRegistrationService crs;
 
 	@Test
+	@Ignore
 	public void whenAllClientDetailsRetreived_thenNoError() {
 		BaseClientDetails bcd = new BaseClientDetails();
 		bcd.setAccessTokenValiditySeconds(1000);

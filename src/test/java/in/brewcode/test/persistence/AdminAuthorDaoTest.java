@@ -3,6 +3,7 @@ package in.brewcode.test.persistence;
 import in.brewcode.api.config.PersistenceConfig;
 import in.brewcode.api.dto.AuthorDto;
 import in.brewcode.api.exception.UserAlreadyExistsException;
+import in.brewcode.api.persistence.dao.IAdminAuthorDao;
 import in.brewcode.api.service.IAdminService;
 import in.brewcode.test.utils.TestUtils;
 
@@ -23,6 +24,9 @@ public class AdminAuthorDaoTest {
 	@Autowired
 	private IAdminService adminService;
 
+	@Autowired
+	private IAdminAuthorDao adminAuthorDao;
+	
 	@Test
 	@Transactional
 	public void createAuthorAndNoErrorsGenerated() throws UserAlreadyExistsException {
@@ -30,8 +34,10 @@ public class AdminAuthorDaoTest {
 		authorDto.setAuthorUserName(RandomStringUtils.randomAlphanumeric(8));
 	authorDto.setAuthorEmail(RandomStringUtils.randomAlphabetic(7) + TestUtils.EMAIL_EXTENSION);
 	adminService.createAuthor(authorDto);
-	
+	adminService.createAuthor(authorDto);
+	 
+	//adminAuthorDao.saveAndFlush(ServiceUtils.convertToAuthorEntity(authorDto, new Author()));
 	
 	}
-
+	
 }

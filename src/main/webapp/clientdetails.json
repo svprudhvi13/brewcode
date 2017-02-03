@@ -6,8 +6,8 @@
       "admin",
       "user"
     ],
-    "client_id": "fooClientIdPassword",
-    "client_secret": "secret",
+    "client_id": "brewcode",
+    "client_secret": "admin@brewcode",
     "authorized_grant_types": [
       "password",
       "authorization_code",
