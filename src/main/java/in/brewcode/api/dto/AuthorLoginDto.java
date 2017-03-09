@@ -5,6 +5,12 @@ import javax.validation.constraints.NotNull;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 public class AuthorLoginDto {
+	@Override
+	public String toString() {
+		return "AuthorLoginDto [authorDto=" + authorDto
+				+ ", authorMobileNumber=" + authorMobileNumber + "]";
+	}
+
 	/**
 	 * This field encapsulates username and email
 	 */

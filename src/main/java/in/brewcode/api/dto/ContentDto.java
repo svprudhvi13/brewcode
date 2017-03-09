@@ -4,6 +4,16 @@ import java.util.Date;
 
 public class ContentDto {
 
+	@Override
+	public String toString() {
+		return "ContentDto [contentDtoId=" + contentDtoId + ", articleDtoId="
+				+ articleDtoId + ", contentDtoBody=" + contentDtoBody
+				+ ", contentDtoMediaPath=" + contentDtoMediaPath
+				+ ", contentDtoCreatedDate=" + contentDtoCreatedDate
+				+ ", contentDtoLastEditedDate=" + contentDtoLastEditedDate
+				+ ", isActive=" + isActive + "]";
+	}
+
 	private long contentDtoId;
 
 	private long articleDtoId;

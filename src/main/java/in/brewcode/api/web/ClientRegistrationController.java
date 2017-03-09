@@ -1,12 +1,17 @@
 package in.brewcode.api.web;
 
+import java.util.Collection;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import in.brewcode.api.web.common.BaseController;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.oauth2.provider.ClientDetails;
 import org.springframework.security.oauth2.provider.ClientDetailsService;
 import org.springframework.security.oauth2.provider.ClientRegistrationService;
@@ -51,7 +56,7 @@ public class ClientRegistrationController extends BaseController{
 		clientRegistrationService.addClientDetails(clientDetails);
 	}
 	
-	@PreAuthorize("#oauth2.hasScope('client, client, admin_app') or hasRole('ADMIN')")
+	@PreAuthorize("#oauth2.hasScope('client, admin_app') or hasRole('ADMIN')")
 	@RequestMapping(value="/delete/{id}", method=RequestMethod.DELETE)
 	@ResponseStatus(value=HttpStatus.OK)
 	public void removeClient(@PathVariable(value="id") String clientId){
@@ -66,5 +71,11 @@ public class ClientRegistrationController extends BaseController{
 	public List<ClientDetails> getAllClients(){
 		
 		return clientRegistrationService.listClientDetails();
+	}
+	@RequestMapping(value="/json", method=RequestMethod.GET)
+	@ResponseBody
+	public ResponseEntity<BaseClientDetails> getClientJson(){
+		
+		return new ResponseEntity<BaseClientDetails>(new BaseClientDetails(), HttpStatus.OK);
 	}
 }

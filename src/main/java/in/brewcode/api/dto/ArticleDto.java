@@ -8,6 +8,18 @@ import javax.validation.constraints.NotNull;
 public class ArticleDto {
 	
 	
+	@Override
+	public String toString() {
+		return "ArticleDto [articleDtoId=" + articleDtoId + ", articleName="
+				+ articleName + ", articleDtoImageLocation="
+				+ articleDtoImageLocation + ", articleDtoCreatedDate="
+				+ articleDtoCreatedDate + ", articleDtoLastEditedDate="
+				+ articleDtoLastEditedDate + ", articleDtoPublishedDate="
+				+ articleDtoPublishedDate + ", isActive=" + isActive
+				+ ", articleAuthorDto=" + articleAuthorDto
+				+ ", articleContentDtos=" + articleContentDtos + "]";
+	}
+
 	private long articleDtoId;
 
 	@NotNull

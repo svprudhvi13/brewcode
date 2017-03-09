@@ -11,11 +11,8 @@ import in.brewcode.api.exception.UserNotFoundException;
 
 import java.util.Date;
 
-import junit.framework.Assert;
-
 import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,7 +34,7 @@ public class CustomUserDetailsServiceTest {
 	private ICustomUserDetailsService cuds;
 
 	@Test
-	@Ignore
+	//@Ignore
 	public void whenNewUserRegisters_NoError()
 			throws UserAlreadyExistsException {
 		AuthorRegistrationDto ard = new AuthorRegistrationDto();
@@ -85,7 +82,7 @@ public class CustomUserDetailsServiceTest {
 	}
 
 	@Test(expected = UserAlreadyExistsException.class)
-	@Ignore
+	//@Ignore
 	public void whenExistingUserNameRegister_Exception()
 			throws UserAlreadyExistsException {
 		AuthorRegistrationDto ard = new AuthorRegistrationDto();
@@ -97,7 +94,7 @@ public class CustomUserDetailsServiceTest {
 		ard.setAdminFirstName(RandomStringUtils.randomAlphabetic(10));
 		ard.setAdminLastName(RandomStringUtils.randomAlphabetic(10));
 		ard.setConfirmPassword("password");
-		ad.setAuthorUserName("scholes18");
+		ad.setAuthorUserName(CustomUserDetailsServiceTest.username);
 		ad.setAuthorEmail(RandomStringUtils.randomAlphanumeric(6)
 				+ "@gmail.com");
 		ald.setAdminPassword("password");
@@ -116,15 +113,15 @@ public void getExistingUserProfile_NoError() throws UserNotFoundException{
 	
 }
 	@Test
-	@Ignore
+	//@Ignore
 	public void getExistingUserDetails_NoError() {
 		UserDetails userDetails = cuds.loadUserByUsername(CustomUserDetailsServiceTest.username);
 	
 	org.springframework.util.Assert.notNull(userDetails, " found");
 	}
 	
-	@Test
-	@Ignore
+	@Test(expected=IllegalArgumentException.class)
+	//@Ignore
 	public void whenUserisSavedWithIncomplete_Error() throws UserAlreadyExistsException {
 		AuthorRegistrationDto ard = new AuthorRegistrationDto();
 		cuds.registerUser(ard);

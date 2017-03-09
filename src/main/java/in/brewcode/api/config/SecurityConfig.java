@@ -3,6 +3,7 @@ package in.brewcode.api.config;
 import javax.sql.DataSource;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -25,11 +26,10 @@ import org.springframework.security.oauth2.provider.token.store.JdbcTokenStore;
 
 @EnableWebSecurity
 @Configuration
-@ComponentScan(basePackages = { "in.brewcode.api.auth"})
+@ComponentScan(basePackages = { "in.brewcode.api.auth" })
 @EnableJpaRepositories(basePackages = "in.brewcode.api.auth.server.dao", queryLookupStrategy = Key.CREATE_IF_NOT_FOUND)
-
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
-	
+
 	/**
 	 * wires to CustomUserDetailsService
 	 */
@@ -41,29 +41,34 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	 */
 	@Autowired
 	private DataSource dataSource;
-	
 
 	/**
-	 * Written seperately to use in UserDetailsService and UserRegistrationService bean
-	 * as it extends both these interfaces
+	 * Written seperately to use in ClientDetailsService and
+	 * ClientRegistrationService bean as it extends both these interfaces
 	 * */
-	
-	private JdbcClientDetailsService getJdbcClientDetailsService(){
-		JdbcClientDetailsService jdbcClientDetailsService = new JdbcClientDetailsService(dataSource);
+
+	private JdbcClientDetailsService getJdbcClientDetailsService() {
+		JdbcClientDetailsService jdbcClientDetailsService = new JdbcClientDetailsService(
+				dataSource);
 		jdbcClientDetailsService.setPasswordEncoder(getPasswordEncoder());
 		return jdbcClientDetailsService;
 	}
-	@Bean
-	public ClientDetailsService getClientDetailsService() {
-		return getJdbcClientDetailsService();
 
+	@Bean
+	public ClientDetailsService clientDetailsService() {
+		 ClientDetailsService cds = getJdbcClientDetailsService();
+return cds;
 	}
 
+	/**
+	 * Used for client registration, but defined here
+	 */
 	@Bean
 	public ClientRegistrationService clientRegistrationService() {
-
-		return getJdbcClientDetailsService();
+		ClientRegistrationService crs = getJdbcClientDetailsService();
+		return crs;
 	}
+
 	@Bean
 	public AuthenticationManager authenticationManagerBean() throws Exception {
 		AuthenticationManager authenticationManager = super
@@ -71,11 +76,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 		return authenticationManager;
 	}
 
-
 	@Bean
-	public PasswordEncoder getPasswordEncoder(){
+	public PasswordEncoder getPasswordEncoder() {
 		return new BCryptPasswordEncoder();
 	}
+
 	@Bean
 	@Primary
 	public DefaultTokenServices getTokenServices() {
@@ -95,8 +100,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	public void globalUserDetails(final AuthenticationManagerBuilder auth)
 			throws Exception {
 		// @formatter:off
-		auth.userDetailsService(userDetailsService)
-		.passwordEncoder(getPasswordEncoder());
+		auth.userDetailsService(userDetailsService).passwordEncoder(
+				getPasswordEncoder());
+		;
 		// .jdbcAuthentication().dataSource(dataSource);
 		// .inMemoryAuthentication().withUser("john").password("123").roles("USER").and().withUser("tom")
 		// .password("111").roles("ADMIN");
@@ -109,8 +115,5 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	 * .antMatchers("/author/**").hasRole("USER")
 	 * //.and().formLogin().permitAll() ; }
 	 */
-	/**
-	 * Used for client registration, but defined here
-	 */
-	
+
 }

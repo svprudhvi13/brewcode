@@ -43,27 +43,31 @@ public class CustomUserDetailsServiceImpl implements ICustomUserDetailsService {
 
 	@Autowired
 	PasswordEncoder passwordEncoder;
-	//@PreAuthorize("hasROLE='USER'")
-	public AuthorRegistrationDto getUserProfile(String username) throws UserNotFoundException{
-		
-		Preconditions.checkArgument(username!=null||username!="");
-		AuthorRegistrationDto authorRegistrationDto = null;
-		if(checkIfUserNameAlreadyExists(username)){
-			Author author = customUserDao.findByAuthorUserName(username);
-			//AuthorLoginDto authorLoginDto = convertToAuthorLoginDto(author);
-			PersonalDetails personalDetails = personalDetailsDao.findByAuthor(author);
-			//Hibernate.initialize(personalDetails); //No need for initializing fetch type changed to EAGER
-			authorRegistrationDto= convertToAuthorRegistrationDto(personalDetails);
-			
-			//authorRegistrationDto.setAuthorLoginDto(authorLoginDto);
 
-			return authorRegistrationDto;	
-		}
-		else{
-			throw new UserNotFoundException("Can't retreive user profile. Invalid username");
+	// @PreAuthorize("hasROLE='USER'")
+	public AuthorRegistrationDto getUserProfile(String username)
+			throws UserNotFoundException {
+
+		Preconditions.checkArgument(username != null || username != "");
+		AuthorRegistrationDto authorRegistrationDto = null;
+		if (checkIfUserNameAlreadyExists(username)) {
+			Author author = customUserDao.findByAuthorUserName(username);
+			// AuthorLoginDto authorLoginDto = convertToAuthorLoginDto(author);
+			PersonalDetails personalDetails = personalDetailsDao
+					.findByAuthor(author);
+			// Hibernate.initialize(personalDetails); //No need for initializing
+			// fetch type changed to EAGER
+			authorRegistrationDto = convertToAuthorRegistrationDto(personalDetails);
+
+			// authorRegistrationDto.setAuthorLoginDto(authorLoginDto);
+
+			return authorRegistrationDto;
+		} else {
+			throw new UserNotFoundException(
+					"Can't retreive user profile. Invalid username");
 		}
 	}
-	
+
 	/**
 	 * Custom method used for getting token and authorizing user by OAuth2
 	 */
@@ -90,7 +94,7 @@ public class CustomUserDetailsServiceImpl implements ICustomUserDetailsService {
 					}
 				}
 			}
-			final boolean accountNonLocked = (author.getIsLocked() == 'Y');
+			final boolean accountNonLocked = (author.getIsLocked() != 'Y');
 			final boolean isActive = (author.getIsActive() == 'Y');
 			// set both if account is active
 			final boolean accountNonExpired, credentialsNonExpired, enabled;
@@ -121,20 +125,30 @@ public class CustomUserDetailsServiceImpl implements ICustomUserDetailsService {
 	public void registerUser(AuthorRegistrationDto authorRegistrationDto)
 			throws UserAlreadyExistsException {
 		AuthorLoginDto authorLoginDto = null;
-		Preconditions.checkArgument(null != authorRegistrationDto, "Registration form cannot be empty");
+		Preconditions.checkArgument(null != authorRegistrationDto,
+				"Registration form cannot be empty");
 		authorLoginDto = authorRegistrationDto.getAuthorLoginDto();
-		Preconditions.checkArgument(null != authorLoginDto, "Login details cannot be empty");
+		Preconditions.checkArgument(null != authorLoginDto,
+				"Login details cannot be empty");
 		final boolean usernameFlag, emailFlag, mobileNumberFlag;
-		usernameFlag=checkIfUserNameAlreadyExists(authorLoginDto.getAuthorDto()
-				.getAuthorUserName());
-		Preconditions.checkArgument(!usernameFlag, "Username is taken");
-		emailFlag=checkIfUserEmailAlreadyExists(authorLoginDto.getAuthorDto()
+		usernameFlag = checkIfUserNameAlreadyExists(authorLoginDto
+				.getAuthorDto().getAuthorUserName());
+		if (usernameFlag) {
+			throw new UserAlreadyExistsException("Username is taken");
+		}
+		emailFlag = checkIfUserEmailAlreadyExists(authorLoginDto.getAuthorDto()
 				.getAuthorEmail());
-		Preconditions.checkArgument(!emailFlag,"Email id is already registered");
-		mobileNumberFlag=checkIfUserMobileNumberExists(authorRegistrationDto
+		if (emailFlag) {
+			throw new UserAlreadyExistsException(
+					"Email id is already registered");
+		}
+		mobileNumberFlag = checkIfUserMobileNumberExists(authorRegistrationDto
 				.getAuthorLoginDto().getAuthorMobileNumber());
-		Preconditions.checkArgument(!mobileNumberFlag, "Mobile number is already registered");
-		if (!(usernameFlag||emailFlag||mobileNumberFlag)) {
+		if (mobileNumberFlag) {
+			throw new UserAlreadyExistsException(
+					"Mobile number is already registered");
+		}
+		if (!(usernameFlag || emailFlag || mobileNumberFlag)) {
 
 			PersonalDetails personalDetails = convertToPersonalDetailsEntity(
 					authorRegistrationDto, new PersonalDetails());
@@ -156,7 +170,6 @@ public class CustomUserDetailsServiceImpl implements ICustomUserDetailsService {
 
 	}
 
-
 	/**
 	 * This method return true if username exists already
 	 * 
@@ -164,7 +177,8 @@ public class CustomUserDetailsServiceImpl implements ICustomUserDetailsService {
 	 * @return
 	 */
 	private boolean checkIfUserNameAlreadyExists(String userName) {
-		Preconditions.checkArgument(null != userName, "Username cannot be empty");
+		Preconditions.checkArgument(null != userName,
+				"Username cannot be empty");
 
 		return (customUserDao.findByAuthorUserName(userName) != null);
 	}
@@ -176,23 +190,25 @@ public class CustomUserDetailsServiceImpl implements ICustomUserDetailsService {
 	 * @return
 	 */
 	private boolean checkIfUserEmailAlreadyExists(String email) {
-		Preconditions.checkArgument(null != email, "Email address cannot be empty");
+		Preconditions.checkArgument(null != email,
+				"Email address cannot be empty");
 
 		return (customUserDao.findByAuthorEmail(email) != null);
 	}
 
 	private boolean checkIfUserMobileNumberExists(String mobileNumber) {
-		Preconditions.checkArgument(null != mobileNumber, "Mobile number cannot be empty");
+		Preconditions.checkArgument(null != mobileNumber,
+				"Mobile number cannot be empty");
 		return (customUserDao.findByMobileNumber(mobileNumber) != null);
 	}
 
 	public void updateUser(AuthorRegistrationDto authorRegistrationDto) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	public void resetPassword(String userNameOrEmail, String password) {
 		// TODO Auto-generated method stub
-		
+
 	}
 }

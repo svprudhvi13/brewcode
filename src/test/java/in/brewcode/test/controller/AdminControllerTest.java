@@ -1,31 +1,45 @@
 package in.brewcode.test.controller;
 
-import in.brewcode.api.config.PersistenceConfig;
+import java.net.URI;
+import java.net.URISyntaxException;
 
+import org.apache.log4j.Logger;
 import org.junit.Ignore;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import org.springframework.test.context.support.AnnotationConfigContextLoader;
+import org.springframework.context.annotation.ImportResource;
+import org.springframework.security.oauth2.provider.client.BaseClientDetails;
 import org.springframework.test.web.servlet.MockMvc;
-@RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(classes={
-PersistenceConfig.class
-}, loader= AnnotationConfigContextLoader.class )
+import org.springframework.util.Assert;
+
+import com.jayway.restassured.RestAssured;
+import com.jayway.restassured.http.ContentType;
+import com.jayway.restassured.response.Response;
+
+/*@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration(classes = { PersistenceConfig.class }, loader = AnnotationConfigContextLoader.class)
+*/
 public class AdminControllerTest {
+
 	
-	private MockMvc mockMvc;
-	
-	/*
-	@Before
-	public void mockMvcSetup(){
-		//this.mockMvc=MockMvcBuilders.webAppContextSetup(ctx).build();
-	}*/
-	
+	private static Logger logger = Logger.getLogger(AdminControllerTest.class);
+	private static String BASE_APP_URI="http://localhost:8080/brewcode";
+
+/*	@Before
+	public void mockMvcSetup() {
+		 this.mockMvc=MockMvcBuilders.webAppContextSetup(ctx).build();
+	}
+*/
 	@Test
 	@Ignore
-	public void createAuthorTest(){
-		//mockMvc.perform();
+	public void getUserJson_NoError() throws URISyntaxException {
+		Response response = RestAssured.given().accept(ContentType.JSON).get(new URI(BASE_APP_URI+"/user/json"));
+		logger.debug("Reponse body "+ response.asString());
+		Assert.isTrue(response.getStatusCode()==200);
+		
+	}
+	
+	@Test
+	public void registerClient_NoError(){
+		
 	}
 }

@@ -2,6 +2,11 @@ package in.brewcode.api.dto;
 
 public class PrivilegeDto {
 
+	@Override
+	public String toString() {
+		return "PrivilegeDto [privilegeName=" + privilegeName + "]";
+	}
+
 	private String privilegeName;
 
 	public String getPrivilegeName() {

@@ -4,6 +4,7 @@ import in.brewcode.api.dto.ArticleDto;
 import in.brewcode.api.dto.AuthorDto;
 import in.brewcode.api.dto.AuthorLoginDto;
 import in.brewcode.api.dto.AuthorRegistrationDto;
+import in.brewcode.api.dto.AuthorWithRoleDto;
 import in.brewcode.api.dto.ContentDto;
 import in.brewcode.api.dto.PrivilegeDto;
 import in.brewcode.api.dto.RoleDto;
@@ -14,8 +15,8 @@ import in.brewcode.api.persistence.entity.PersonalDetails;
 import in.brewcode.api.persistence.entity.Privilege;
 import in.brewcode.api.persistence.entity.Role;
 
-import java.util.HashSet;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import com.google.common.base.Preconditions;
 
@@ -35,6 +36,7 @@ public class ServiceUtils {
 	public static Article converttoArticleEntity(ArticleDto articleDto, Article article) {
 			Preconditions.checkArgument((articleDto!=null)&&article!=null);
 						
+			
 			article.setArticleName(articleDto.getArticleName());
 			
 			article.setArticlePublishedDate(articleDto
@@ -129,9 +131,22 @@ public class ServiceUtils {
 		
 	}
 	
+	public static AuthorWithRoleDto convertToAuthorWithRoleDto(Author author){
+		AuthorWithRoleDto awrd = null;
+		Preconditions.checkArgument(author!=null, "Author Entity cannot be null");
+		awrd = new AuthorWithRoleDto();
+		awrd.setAuthorDto(convertToAuthorDto(author));
+		awrd.setLocked(author.getIsLocked()=='Y'?true:false);
+		//Authors can have no roles assigned to them. In convertToRole(..), we shall not pass null
+		if(author.getRole()!=null){
+		awrd.setRoleDto(convertToRoleDto(author.getRole()));
+		}
+		return awrd;
+	}
+	
 	public static AuthorRegistrationDto convertToAuthorRegistrationDto(PersonalDetails personalDetails){
 		AuthorRegistrationDto authorRegistrationDto = null;
-		Preconditions.checkArgument(personalDetails!=null);
+		Preconditions.checkArgument(personalDetails!=null, "Personal Details cannot be null");
 		authorRegistrationDto = new AuthorRegistrationDto();
 		authorRegistrationDto.setAddress(personalDetails.getAddress());
 		authorRegistrationDto.setAdminCreatedDate(personalDetails.getCreateDate());
@@ -199,8 +214,8 @@ public class ServiceUtils {
 
 	public static Role convertToRoleEntity(RoleDto roleDto, Role role) {
 		Preconditions.checkArgument(roleDto != null && role != null);
-	
-		role.setRoleName(roleDto.getRoleName());
+		//Rolenames should be saved in uppercase
+		role.setRoleName(roleDto.getRoleName().toUpperCase());
 		return role;
 	}
 
@@ -209,18 +224,21 @@ public class ServiceUtils {
 		RoleDto roleDto = new RoleDto();
 		roleDto.setRoleName(role.getRoleName());
 		if (role.getRolePrivileges() != null) {
-			Set<PrivilegeDto> privilegeSet = new HashSet<PrivilegeDto>();
-			for (Privilege priv : role.getRolePrivileges()) {
-				privilegeSet.add(convertToPrivilegeDto(priv));
-			}
+			/**
+			 * Removed for each and used Java 8 streams and collectors
+			 */
+			Set<PrivilegeDto> privilegeSet =
+			role.getRolePrivileges().stream().map(priv -> convertToPrivilegeDto(priv)).collect(Collectors.toSet());
+			roleDto.setPrivileges(privilegeSet);
 		}
-
+ 
 		return roleDto;
 	}
 
 	public static Privilege convertToPrivilegeEntity(PrivilegeDto privilegeDto,
 			Privilege privilege) {
-		privilege.setPrivilegeName(privilegeDto.getPrivilegeName());
+		//Privileges should be saved in uppercase
+		privilege.setPrivilegeName(privilegeDto.getPrivilegeName().toUpperCase());
 		return privilege;
 	}
 

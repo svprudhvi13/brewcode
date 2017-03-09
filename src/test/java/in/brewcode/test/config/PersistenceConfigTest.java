@@ -16,7 +16,7 @@ PersistenceConfig.class
 public class PersistenceConfigTest {
 
 	@Test
-	@Ignore
+	//@Ignore
 	public void testApplicationConfig(){
 		
 	}

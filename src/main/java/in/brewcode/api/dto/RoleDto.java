@@ -5,6 +5,12 @@ import java.util.Set;
 public class RoleDto {
 	
 	
+	@Override
+	public String toString() {
+		return "RoleDto [roleName=" + roleName + ", privileges=" + privileges
+				+ "]";
+	}
+
 	private String roleName;
 	
 	private Set<PrivilegeDto> privileges;

@@ -31,7 +31,6 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter{
 		//.hasRole("ADMIN")
 		.antMatchers("/author/**").access("hasRole('AUTHOR') or hasRole('USER')")
 		.anyRequest().permitAll()
-		
 		//.permitAll()
 		//.hasRole("USER")
 //		.authenticated()

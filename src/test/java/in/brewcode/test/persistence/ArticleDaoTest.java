@@ -5,6 +5,7 @@ import in.brewcode.api.dto.ArticleDto;
 import in.brewcode.api.dto.AuthorDto;
 import in.brewcode.api.dto.ContentDto;
 import in.brewcode.api.exception.UserAlreadyExistsException;
+import in.brewcode.api.exception.UserNotFoundException;
 import in.brewcode.api.service.IAdminService;
 import in.brewcode.api.service.IArticleAndContentService;
 import in.brewcode.test.utils.TestUtils;
@@ -50,7 +51,7 @@ public class ArticleDaoTest {
 	@Test
 	@Ignore
 	@Transactional
-	public void createArticlewithNoErrors() {
+	public void createArticlewithNoErrors() throws UserNotFoundException {
 		ArticleDto articleDto = new ArticleDto();
 		
 		AuthorDto authorDtoLocal = null;

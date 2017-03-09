@@ -46,7 +46,7 @@ public class TokenRevocationLiveTest {
     @Test
     @Ignore
     public void givenDBUser_whenRevokeToken_thenAuthorized() {
-        final String accessToken = obtainAccessToken("fooClientIdPassword", "john", "password");
+        final String accessToken = obtainAccessToken("brewcode", "pscholes", "password");
         assertNotNull(accessToken);
     }
 	

@@ -17,7 +17,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter
 
 @Configuration
 @EnableWebMvc
-@ComponentScan(basePackages = "in.brewcode.api.web")
+@ComponentScan(basePackages = {"in.brewcode.api.web", "in.brewcode.api.config"})
 public class WebConfig extends WebMvcConfigurerAdapter {
 	/**
 	 * Configured to support multipart streams
@@ -37,7 +37,10 @@ public class WebConfig extends WebMvcConfigurerAdapter {
 			java.util.List<org.springframework.web.method.support.HandlerMethodArgumentResolver> argumentResolvers) {
 		argumentResolvers.add(getAuthenticationPrincipalArgumentResolver());
 	}
-
+	/**
+	 * In order to uploading multipart files
+	 * @return
+	 */
 	@Bean
 	@Qualifier("multipartResolver")
 	public CommonsMultipartResolver getMultipartResolver() {
@@ -61,8 +64,8 @@ public class WebConfig extends WebMvcConfigurerAdapter {
 	}
 	private List<MediaType> getSupportedMediaTypes() {
 		final List<MediaType> list = new ArrayList<MediaType>();
-		list.add(MediaType.IMAGE_JPEG);
-		list.add(MediaType.IMAGE_PNG);
+//		list.add(MediaType.IMAGE_JPEG);
+	//	list.add(MediaType.IMAGE_PNG);
 		list.add(MediaType.ALL);
 		return list;
 	}

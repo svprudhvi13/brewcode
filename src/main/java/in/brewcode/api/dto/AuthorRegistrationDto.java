@@ -7,6 +7,15 @@ import javax.validation.constraints.NotNull;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 public class AuthorRegistrationDto {
+	@Override
+	public String toString() {
+		return "AuthorRegistrationDto [adminFirstName=" + adminFirstName
+				+ ", adminLastName=" + adminLastName + ", adminDateOfBirth="
+				+ adminDateOfBirth + ", adminCreatedDate=" + adminCreatedDate
+				+ ", address=" + address + ", authorLoginDto=" + authorLoginDto
+				+ "]";
+	}
+
 	@NotNull
 	private String adminFirstName;
 	@NotNull
