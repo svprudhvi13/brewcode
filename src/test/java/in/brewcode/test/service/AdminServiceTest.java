@@ -20,9 +20,12 @@ import in.brewcode.api.persistence.entity.Privilege;
 import in.brewcode.api.persistence.entity.Role;
 import in.brewcode.api.service.IAdminService;
 
+import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
+
+import javax.print.attribute.HashAttributeSet;
 
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.log4j.Logger;
@@ -37,7 +40,7 @@ import org.springframework.util.Assert;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = { PersistenceConfig.class, SecurityConfig.class })
-@Transactional
+// @Transactional
 public class AdminServiceTest {
 
 	private static Logger log = Logger.getLogger(AdminServiceTest.class);
@@ -55,11 +58,41 @@ public class AdminServiceTest {
 
 	private String TEST_USER_EMAIL;
 
+	private String TEST_PRIVILEGE_NAME;
+
+	private String TEST_ROLE_NAME;
+
 	@Before
 	public void init() {
+		TEST_ROLE_NAME = RandomStringUtils.randomAlphabetic(7);
+		TEST_PRIVILEGE_NAME = RandomStringUtils.randomAlphabetic(7);
 		TEST_USER_NAME = RandomStringUtils.randomAlphabetic(7);
 		TEST_USER_EMAIL = RandomStringUtils.randomAlphanumeric(7) + "@mail.com";
 		log.debug("Inside init method");
+
+		PrivilegeDto pd = new PrivilegeDto();
+		pd.setPrivilegeName(TEST_PRIVILEGE_NAME);
+		try {
+			adminService.addPrivilege(pd);
+		} catch (PrivilegeAlreadyExistsException e1) {
+			log.error(e1.getMessage(), e1);
+		}
+
+		RoleDto rd = new RoleDto();
+		rd.setRoleName(TEST_ROLE_NAME);
+		rd.setPrivileges(new HashSet<PrivilegeDto>() {
+			{
+				add(pd);
+			}
+		});
+		try {
+			adminService.addRole(rd);
+		} catch (PrivilegeNotFoundException e1) {
+			log.error(e1.getMessage(), e1);
+
+		} catch (RoleAlreadyExistsException e1) {
+			log.error(e1.getMessage(), e1);
+		}
 		AuthorDto ad = new AuthorDto();
 		ad.setAuthorUserName(TEST_USER_NAME);
 		ad.setAuthorEmail(TEST_USER_EMAIL);
@@ -74,7 +107,6 @@ public class AdminServiceTest {
 		log.debug("Created user:" + ad.getAuthorUserName());
 	}
 
-	
 	@Test
 	public void findByUserNameWithExistingUsername_Noerrors()
 			throws UserNotFoundException {
@@ -349,18 +381,9 @@ public class AdminServiceTest {
 	public void findAllRoles_NoError() throws PrivilegeNotFoundException,
 			RoleAlreadyExistsException, PrivilegeAlreadyExistsException {
 
-		PrivilegeDto pd = new PrivilegeDto();
-		final String privilege = RandomStringUtils.randomAlphabetic(5);
-		pd.setPrivilegeName(privilege);
-		adminService.addPrivilege(pd);
-		RoleDto roleDto = new RoleDto();
-		roleDto.setRoleName(RandomStringUtils.randomAlphabetic(5));
-		Set<PrivilegeDto> privilegeDtos = new LinkedHashSet<PrivilegeDto>();
-		privilegeDtos.add(pd);
-		roleDto.setPrivileges(privilegeDtos);
-		adminService.addRole(roleDto);
 
 		List<RoleDto> list = adminService.getAllRoles();
+		
 		Assert.notEmpty(list);
 	}
 
@@ -376,8 +399,10 @@ public class AdminServiceTest {
 
 		Assert.notEmpty(list);
 	}
+
 	/**
 	 * Add and delete(soft) privileges. Find list is empty
+	 * 
 	 * @throws PrivilegeAlreadyExistsException
 	 * @throws PrivilegeNotFoundException
 	 */
@@ -388,14 +413,14 @@ public class AdminServiceTest {
 		final String privilege = RandomStringUtils.randomAlphabetic(5);
 		pd.setPrivilegeName(privilege);
 		adminService.addPrivilege(pd);
-		
+
 		adminService.deletePrivilege(privilege);
 		List<PrivilegeDto> list = adminService.getAllPrivileges();
 
-		Assert.isTrue(!list.contains(privilegeDao.findByPrivilegeNameIgnoreCase(privilege)));
+		Assert.isTrue(!list.contains(privilegeDao
+				.findByPrivilegeNameIgnoreCase(privilege)));
 	}
 
-	
 	@Test(expected = RoleNotFoundException.class)
 	public void deleteInvalidRoleName_Error() throws RoleNotFoundException,
 			RoleInUseException {
@@ -631,11 +656,10 @@ public class AdminServiceTest {
 		roleDto1.setPrivileges(privilegeDtos);
 		adminService.addRole(roleDto);
 		// Assign newly added role to user created in init method, 1st time
-		 adminService.assignRoletoAuthor(TEST_USER_NAME,
-		 roleDto.getRoleName());
+		adminService.assignRoletoAuthor(TEST_USER_NAME, roleDto.getRoleName());
 
 		adminService.deletePrivilege(privilege);
-		Privilege priv= privilegeDao.findByPrivilegeNameIgnoreCase(privilege);
+		Privilege priv = privilegeDao.findByPrivilegeNameIgnoreCase(privilege);
 		Role role = roleDao.findByRoleNameIgnoreCase(roleDto.getRoleName());
 		Assert.isTrue(!role.getRolePrivileges().contains(priv));
 		Assert.isNull(priv);
@@ -763,9 +787,7 @@ public class AdminServiceTest {
 		adminService.updateRoleName("", RandomStringUtils.randomAlphabetic(5));
 
 	}
-	
-	
-	
+
 	/*
 	 * 
 	 * public void removeRoleOfAuthor(String authorUserName, String roleName)

@@ -25,6 +25,7 @@ import in.brewcode.api.persistence.entity.Author;
 import in.brewcode.api.persistence.entity.Privilege;
 import in.brewcode.api.persistence.entity.Role;
 import in.brewcode.api.service.IAdminService;
+import in.brewcode.api.service.common.ServiceUtils;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -88,7 +89,7 @@ public class AdminService implements IAdminService {
 			Role role = convertToRoleEntity(roleDto, new Role());
 			Set<Privilege> rolePrivileges = null;
 			if (roleDto.getPrivileges() != null) {
-				rolePrivileges = new HashSet<Privilege>();
+				rolePrivileges =new HashSet<Privilege>();
 				for (PrivilegeDto pd : roleDto.getPrivileges()) {
 					Privilege privilege = privilegeDao
 							.findByPrivilegeNameIgnoreCase(pd
@@ -102,7 +103,7 @@ public class AdminService implements IAdminService {
 				}
 				role.setRolePrivileges(rolePrivileges);
 			}
-			roleDao.save(role);
+			roleDao.saveAndFlush(role);
 		} else {
 			throw new RoleAlreadyExistsException("Cannot add this role again");
 		}
@@ -376,7 +377,8 @@ public class AdminService implements IAdminService {
 			return null;
 		} else {
 			List<RoleDto> roleDtos = roles.stream()
-					.map(role -> convertToRoleDto(role))
+					.map(ServiceUtils::convertToRoleDto)
+					//.map(role -> convertToRoleDto(role))
 					.collect(Collectors.toList());
 			// Used Java 8 streams and collectors
 			/*

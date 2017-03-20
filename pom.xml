@@ -16,11 +16,20 @@
 		<slf4j-log4j2-version>2.0.1</slf4j-log4j2-version>
 
 		<org.springframework.version>4.3.4.RELEASE</org.springframework.version>
+	<io.springfox-swagger2.version>2.4.0</io.springfox-swagger2.version>
 	</properties>
 
 	<dependencies>
-
-
+<dependency>
+    <groupId>io.springfox</groupId>
+    <artifactId>springfox-swagger2</artifactId>
+    <version>${io.springfox-swagger2.version}</version>
+</dependency>
+<dependency>
+    <groupId>io.springfox</groupId>
+    <artifactId>springfox-swagger-ui</artifactId>
+    <version>${io.springfox-swagger2.version}</version>
+</dependency>
 		<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-api</artifactId>

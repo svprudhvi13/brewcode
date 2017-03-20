@@ -1,5 +1,7 @@
 package in.brewcode.api.web;
 
+
+
 import in.brewcode.api.dto.AuthorDto;
 import in.brewcode.api.dto.AuthorWithRoleDto;
 import in.brewcode.api.dto.PrivilegeDto;
@@ -12,7 +14,6 @@ import in.brewcode.api.exception.RoleNotFoundException;
 import in.brewcode.api.exception.UserAlreadyExistsException;
 import in.brewcode.api.exception.UserNotFoundException;
 import in.brewcode.api.service.IAdminService;
-import in.brewcode.api.web.common.BaseController;
 
 import java.util.List;
 
@@ -22,7 +23,6 @@ import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -33,9 +33,9 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 
 import com.google.common.base.Preconditions;
 
-@Controller(value = "adminController")
-@RequestMapping(value = "/admin")
-public class AdminController extends BaseController {
+public class AdminController {
+
+	
 
 	private static Logger logger = Logger.getLogger(AdminController.class);
 
@@ -261,7 +261,7 @@ public class AdminController extends BaseController {
 	 */
 	@PreAuthorize("#oauth2.hasScope('admin_app') and hasRole('ADMIN')")
 	@RequestMapping(value = "/authors/{username}", method = RequestMethod.PUT)
-	// role as requestparam
+	// role as request param
 	@ResponseStatus(value = HttpStatus.OK)
 	public void assignRoleToAuthor(
 			@PathVariable(value = "username", required = true) String userName,
