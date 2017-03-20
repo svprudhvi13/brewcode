@@ -70,7 +70,7 @@ public class AdminServiceTest {
 		TEST_USER_EMAIL = RandomStringUtils.randomAlphanumeric(7) + "@mail.com";
 		log.debug("Inside init method");
 
-		PrivilegeDto pd = new PrivilegeDto();
+		final PrivilegeDto pd = new PrivilegeDto();
 		pd.setPrivilegeName(TEST_PRIVILEGE_NAME);
 		try {
 			adminService.addPrivilege(pd);
