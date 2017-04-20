@@ -1,7 +1,5 @@
 package in.brewcode.api.web;
 
-
-
 import in.brewcode.api.dto.AuthorDto;
 import in.brewcode.api.dto.AuthorWithRoleDto;
 import in.brewcode.api.dto.PrivilegeDto;
@@ -33,9 +31,9 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 
 import com.google.common.base.Preconditions;
 
-public class AdminController {
 
-	
+@RequestMapping(value="/admin")
+public class AdminController {
 
 	private static Logger logger = Logger.getLogger(AdminController.class);
 

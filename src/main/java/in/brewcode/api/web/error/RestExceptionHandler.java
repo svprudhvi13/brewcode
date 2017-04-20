@@ -7,6 +7,7 @@ import in.brewcode.api.exception.UserNotFoundException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.oauth2.provider.ClientAlreadyExistsException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
@@ -34,7 +35,10 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler{
 		return handleExceptionInternal(ex, ex.getMessage(), new HttpHeaders(), HttpStatus.FAILED_DEPENDENCY, request);
 	}
 	
-	/*@ExceptionHandler(SQLException.class)
+	@ExceptionHandler(ClientAlreadyExistsException.class)
+	public ResponseEntity<Object> handleClientAlreadyExistsException(ClientAlreadyExistsException ex, WebRequest request){
+		return handleExceptionInternal(ex, ex.getMessage(), new HttpHeaders(), HttpStatus.NOT_ACCEPTABLE, request);
+	}/*@ExceptionHandler(SQLException.class)
 	public ResponseEntity<Object> handlesSQLException(Exception ex, WebRequest request){
 		return handleExceptionInternal(ex, "db is busy. we are working on it", new HttpHeaders(), HttpStatus.INTERNAL_SERVER_ERROR, request);
 	}*/

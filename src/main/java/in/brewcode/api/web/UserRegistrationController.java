@@ -89,7 +89,7 @@ public class UserRegistrationController extends BaseController {
 	 * Should not go in deployment
 	 * @return
 	 */
-	@RequestMapping("/json")
+	@RequestMapping(value="/json", method=RequestMethod.GET)
 	@ResponseBody
 	public AuthorRegistrationDto getJsonOfUser() {
 		AuthorRegistrationDto ard = new AuthorRegistrationDto();
