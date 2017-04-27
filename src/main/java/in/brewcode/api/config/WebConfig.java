@@ -17,11 +17,18 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter
 
 @Configuration
 @EnableWebMvc
-@ComponentScan(basePackages = {"in.brewcode.api.web", "in.brewcode.api.config"})
+@ComponentScan(basePackages = { "in.brewcode.api.web",
+		"in.brewcode.api.web.error", "in.brewcode.api.persistence.dao",
+		"in.brewcode.api.persistence.dao.common",
+		"in.brewcode.api.persistence.dao.common", "in.brewcode.api.service",
+		"in.brewcode.api.service.impl", "in.brewcode.api.service.common",
+		"in.brewcode.api.config", "in.brewcode.api.auth.resource.config",
+		"in.brewcode.api.auth.server.config",
+		"in.brewcode.api.auth.server.dao",
+		"in.brewcode.api.auth.server.service",
+		"in.brewcode.api.auth.server.service.impl" })
 public class WebConfig extends WebMvcConfigurerAdapter {
 
-
-	
 	/**
 	 * Configured to support multipart streams
 	 */
@@ -33,15 +40,17 @@ public class WebConfig extends WebMvcConfigurerAdapter {
 	}
 
 	/**
-     * Configured to user @AuthenticationPrincipal annotation
-     */
+	 * Configured to user @AuthenticationPrincipal annotation
+	 */
 	@Override
 	public void addArgumentResolvers(
 			java.util.List<org.springframework.web.method.support.HandlerMethodArgumentResolver> argumentResolvers) {
 		argumentResolvers.add(getAuthenticationPrincipalArgumentResolver());
 	}
+
 	/**
 	 * In order to uploading multipart files
+	 * 
 	 * @return
 	 */
 	@Bean
@@ -51,20 +60,24 @@ public class WebConfig extends WebMvcConfigurerAdapter {
 		multipartResolver.setMaxUploadSize(100000000);
 		return multipartResolver;
 	}
+
 	/**
-	 * Without spring boot, you have to add request handler by overriding the method in {@link WebMvcConfigurerAdapter}
+	 * Without spring boot, you have to add request handler by overriding the
+	 * method in {@link WebMvcConfigurerAdapter}
+	 * 
 	 * @return
 	 */
-	
+
 	@Override
-	public void addResourceHandlers(org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry registry) {
-		registry.addResourceHandler("swagger-ui.html")
-	      .addResourceLocations("classpath:/META-INF/resources/");
-	 
-	    registry.addResourceHandler("/webjars/**")
-	      .addResourceLocations("classpath:/META-INF/resources/webjars/");	
+	public void addResourceHandlers(
+			org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry registry) {
+		registry.addResourceHandler("swagger-ui.html").addResourceLocations(
+				"classpath:/META-INF/resources/");
+
+		registry.addResourceHandler("/webjars/**").addResourceLocations(
+				"classpath:/META-INF/resources/webjars/");
 	}
-	
+
 	@Bean
 	public ByteArrayHttpMessageConverter byteArrayHttpMessageConverter() {
 		final ByteArrayHttpMessageConverter arrayHttpMessageConverter = new ByteArrayHttpMessageConverter();
@@ -75,13 +88,14 @@ public class WebConfig extends WebMvcConfigurerAdapter {
 	}
 
 	@Bean
-	public AuthenticationPrincipalArgumentResolver getAuthenticationPrincipalArgumentResolver(){
+	public AuthenticationPrincipalArgumentResolver getAuthenticationPrincipalArgumentResolver() {
 		return new AuthenticationPrincipalArgumentResolver();
 	}
+
 	private List<MediaType> getSupportedMediaTypes() {
 		final List<MediaType> list = new ArrayList<MediaType>();
-//		list.add(MediaType.IMAGE_JPEG);
-	//	list.add(MediaType.IMAGE_PNG);
+		// list.add(MediaType.IMAGE_JPEG);
+		// list.add(MediaType.IMAGE_PNG);
 		list.add(MediaType.ALL);
 		return list;
 	}

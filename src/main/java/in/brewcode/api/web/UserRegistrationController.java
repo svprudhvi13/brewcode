@@ -47,7 +47,7 @@ public class UserRegistrationController extends BaseController {
 	 * @param authorRegistrationDto
 	 * @throws UserAlreadyExistsException
 	 */
-	@PreAuthorize("#oauth2.hasAnyScope('client', 'admin_app')")
+	//@PreAuthorize("#oauth2.hasAnyScope('client', 'admin_app')")
 	@RequestMapping(value = "/register", method = RequestMethod.POST)
 	@ResponseStatus(value = HttpStatus.CREATED)
 	public void registerUser(

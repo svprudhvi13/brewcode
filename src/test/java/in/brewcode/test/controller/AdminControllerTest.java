@@ -30,7 +30,6 @@ public class AdminControllerTest {
 	}
 */
 	@Test
-	@Ignore
 	public void getUserJson_NoError() throws URISyntaxException {
 		Response response = RestAssured.given().accept(ContentType.JSON).get(new URI(BASE_APP_URI+"/user/json"));
 		logger.debug("Reponse body "+ response.asString());
@@ -39,7 +38,10 @@ public class AdminControllerTest {
 	}
 	
 	@Test
-	public void registerClient_NoError(){
-		
+	public void registerClient_NoError() throws URISyntaxException{
+		Response response = RestAssured.get(new URI("http://localhost:8080/brewcode/oauth/token?grant_type=password&username=scholes18&password=password"));
+		logger.debug("Reponse body "+ response.asString());
+	System.out.println("Reponse body "+ response.asString());
+	
 	}
 }

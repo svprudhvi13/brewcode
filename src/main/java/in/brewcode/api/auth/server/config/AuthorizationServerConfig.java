@@ -70,6 +70,7 @@ public class AuthorizationServerConfig extends
 	@Override
 	public void configure(ClientDetailsServiceConfigurer clients)
 			throws Exception {
+	//	clients.withClientDetails(clientDetailsService);
 		clients.jdbc(dataSource);
 	}
 
@@ -80,7 +81,8 @@ public class AuthorizationServerConfig extends
 				// .tokenStore(tokenStore);
 				.userDetailsService(userDetailsService)
 				.tokenServices(tokenServices)
-			;
+				.setClientDetailsService(clientDetailsService);
+				;
 	}
 
 }

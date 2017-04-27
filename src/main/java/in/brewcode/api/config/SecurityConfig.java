@@ -3,9 +3,7 @@ package in.brewcode.api.config;
 import javax.sql.DataSource;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
@@ -26,7 +24,7 @@ import org.springframework.security.oauth2.provider.token.store.JdbcTokenStore;
 
 @EnableWebSecurity
 @Configuration
-@ComponentScan(basePackages = { "in.brewcode.api.auth" })
+//@ComponentScan(basePackages = { "in.brewcode.api.auth" })
 @EnableJpaRepositories(basePackages = "in.brewcode.api.auth.server.dao", queryLookupStrategy = Key.CREATE_IF_NOT_FOUND)
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
@@ -54,10 +52,15 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 		return jdbcClientDetailsService;
 	}
 
-	@Bean
-	public ClientDetailsService clientDetailsService() {
-		 ClientDetailsService cds = getJdbcClientDetailsService();
+	/*@Bean
+	public ClientDetailsUserDetailsService clientDetailsService() {
+		ClientDetailsUserDetailsService cds = new ClientDetailsUserDetailsService((ClientDetailsService)getJdbcClientDetailsService());
 return cds;
+	}*/
+	@Bean 
+	public ClientDetailsService clientDetailsService(){
+		ClientDetailsService cds = getJdbcClientDetailsService();
+		return cds;
 	}
 
 	/**
