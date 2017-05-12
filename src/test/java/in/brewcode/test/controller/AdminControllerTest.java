@@ -6,9 +6,6 @@ import java.net.URISyntaxException;
 import org.apache.log4j.Logger;
 import org.junit.Ignore;
 import org.junit.Test;
-import org.springframework.context.annotation.ImportResource;
-import org.springframework.security.oauth2.provider.client.BaseClientDetails;
-import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.util.Assert;
 
 import com.jayway.restassured.RestAssured;
@@ -30,6 +27,7 @@ public class AdminControllerTest {
 	}
 */
 	@Test
+	@Ignore
 	public void getUserJson_NoError() throws URISyntaxException {
 		Response response = RestAssured.given().accept(ContentType.JSON).get(new URI(BASE_APP_URI+"/user/json"));
 		logger.debug("Reponse body "+ response.asString());
@@ -38,6 +36,8 @@ public class AdminControllerTest {
 	}
 	
 	@Test
+
+	@Ignore
 	public void registerClient_NoError() throws URISyntaxException{
 		Response response = RestAssured.get(new URI("http://localhost:8080/brewcode/oauth/token?grant_type=password&username=scholes18&password=password"));
 		logger.debug("Reponse body "+ response.asString());

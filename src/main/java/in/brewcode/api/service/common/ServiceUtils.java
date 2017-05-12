@@ -22,54 +22,46 @@ import com.google.common.base.Preconditions;
 
 public class ServiceUtils {
 
-
-	
 	/**
 	 * Content and Author Entities are not converted from Dto However, Author of
 	 * article should never change and content entity are saved/updated first
-	 * before updating article
-	 * Last edited Date, Created Date and isActive fields are not converted to Entity as they
-	 * are updated in Persistence layer with @Prepersist and @Preupdate
+	 * before updating article Last edited Date, Created Date and isActive
+	 * fields are not converted to Entity as they are updated in Persistence
+	 * layer with @Prepersist and @Preupdate
+	 * 
 	 * @param articleDto
 	 * @return
 	 */
-	public static Article converttoArticleEntity(ArticleDto articleDto, Article article) {
-			Preconditions.checkArgument((articleDto!=null)&&article!=null);
-						
-			
-			article.setArticleName(articleDto.getArticleName());
-			
-			article.setArticlePublishedDate(articleDto
-					.getArticleDtoPublishedDate());
-			article.setIsActive(articleDto.getIsActive());
+	public static Article converttoArticleEntity(ArticleDto articleDto,
+			Article article) {
+		Preconditions.checkArgument((articleDto != null) && article != null);
+
+		article.setArticleName(articleDto.getArticleName());
+
+		article.setArticlePublishedDate(articleDto.getArticleDtoPublishedDate());
+		article.setIsActive(articleDto.getIsActive());
 
 		/**
-		 * 	// Code to full convert of ContentDto to Content (Entity)
-		 
-			if (Preconditions
-					.checkNotNull(articleDto.getArticleContentDtos() != null)) {
-				List<Content> articleContents = new ArrayList<Content>();
-				for (ContentDto contentDto : articleDto.getArticleContentDtos()) {
-					articleContents.add(convertToContentEntity(contentDto));
-				}
-			}
-*/
-			return article;
-		}
+		 * // Code to full convert of ContentDto to Content (Entity)
+		 * 
+		 * if (Preconditions .checkNotNull(articleDto.getArticleContentDtos() !=
+		 * null)) { List<Content> articleContents = new ArrayList<Content>();
+		 * for (ContentDto contentDto : articleDto.getArticleContentDtos()) {
+		 * articleContents.add(convertToContentEntity(contentDto)); } }
+		 */
+		return article;
+	}
 
+	public static Content convertToContentEntity(ContentDto contentDto,
+			Content content) {
 
+		Preconditions.checkArgument((contentDto != null) && (content != null));
 
-	public static Content convertToContentEntity(ContentDto contentDto, Content content) {
-		
-			Preconditions.checkArgument((contentDto!=null)&&(content!=null));
-		
-				content.setContentBody(contentDto.getContentDtoBody());
-				//For new this will be 0, anyways.
-				content.setContentId(contentDto.getContentDtoId());
-				content.setContentMediaPath(contentDto.getContentDtoMediaPath());
-			
-			
-		
+		content.setContentBody(contentDto.getContentDtoBody());
+		// For new this will be 0, anyways.
+		content.setContentId(contentDto.getContentDtoId());
+		content.setContentMediaPath(contentDto.getContentDtoMediaPath());
+
 		return content;
 	}
 
@@ -119,80 +111,91 @@ public class ServiceUtils {
 			contentDto = new ContentDto();
 			contentDto.setContentDtoBody(content.getContentBody());
 			contentDto.setContentDtoId(content.getContentId());
-			contentDto.setContentDtoLastEditedDate(content
-					.getLastUpdatedDate());
 			contentDto
-					.setContentDtoCreatedDate(content.getCreateDate());
+					.setContentDtoLastEditedDate(content.getLastUpdatedDate());
+			contentDto.setContentDtoCreatedDate(content.getCreateDate());
 			contentDto.setContentDtoMediaPath(content.getContentMediaPath());
 			contentDto.setIsActive(content.getIsActive());
 
 		}
 		return contentDto;
-		
+
 	}
-	
-	public static AuthorWithRoleDto convertToAuthorWithRoleDto(Author author){
+
+	public static AuthorWithRoleDto convertToAuthorWithRoleDto(Author author) {
 		AuthorWithRoleDto awrd = null;
-		Preconditions.checkArgument(author!=null, "Author Entity cannot be null");
+		Preconditions.checkArgument(author != null,
+				"Author Entity cannot be null");
 		awrd = new AuthorWithRoleDto();
 		awrd.setAuthorDto(convertToAuthorDto(author));
-		awrd.setLocked(author.getIsLocked()=='Y'?true:false);
-		//Authors can have no roles assigned to them. In convertToRole(..), we shall not pass null
-		if(author.getRole()!=null){
-		awrd.setRoleDto(convertToRoleDto(author.getRole()));
+		awrd.setLocked(author.getIsLocked() == 'Y' ? true : false);
+		// Authors can have no roles assigned to them. In convertToRole(..), we
+		// shall not pass null
+		if (author.getRole() != null) {
+			awrd.setRoleDto(convertToRoleDto(author.getRole()));
 		}
 		return awrd;
 	}
-	
-	public static AuthorRegistrationDto convertToAuthorRegistrationDto(PersonalDetails personalDetails){
+
+	public static AuthorRegistrationDto convertToAuthorRegistrationDto(
+			PersonalDetails personalDetails) {
 		AuthorRegistrationDto authorRegistrationDto = null;
-		Preconditions.checkArgument(personalDetails!=null, "Personal Details cannot be null");
+		Preconditions.checkArgument(personalDetails != null,
+				"Personal Details cannot be null");
 		authorRegistrationDto = new AuthorRegistrationDto();
 		authorRegistrationDto.setAddress(personalDetails.getAddress());
-		authorRegistrationDto.setAdminCreatedDate(personalDetails.getCreateDate());
-		authorRegistrationDto.setAdminDateOfBirth(personalDetails.getDateOfBirth());
+		authorRegistrationDto.setAdminCreatedDate(personalDetails
+				.getCreateDate());
+		authorRegistrationDto.setAdminDateOfBirth(personalDetails
+				.getDateOfBirth());
 		authorRegistrationDto.setAdminFirstName(personalDetails.getFirstName());
 		authorRegistrationDto.setAdminLastName(personalDetails.getLastName());
-		authorRegistrationDto.setAuthorLoginDto(convertToAuthorLoginDto(personalDetails.getAuthor()));
-		//No need to setConfirmPassword of AuthorRegistrationDto
+		authorRegistrationDto
+				.setAuthorLoginDto(convertToAuthorLoginDto(personalDetails
+						.getAuthor()));
+		// No need to setConfirmPassword of AuthorRegistrationDto
 		return authorRegistrationDto;
 	}
-	public static AuthorLoginDto convertToAuthorLoginDto(Author author){
+
+	public static AuthorLoginDto convertToAuthorLoginDto(Author author) {
 		AuthorLoginDto authorLoginDto = null;
-		Preconditions.checkArgument(author!=null);
+		Preconditions.checkArgument(author != null);
 		authorLoginDto = new AuthorLoginDto();
-		
-		//To set AuthorDto of AuthorLoginDto from Author
-		AuthorDto authorDto=convertToAuthorDto(author);
+
+		// To set AuthorDto of AuthorLoginDto from Author
+		AuthorDto authorDto = convertToAuthorDto(author);
 		authorLoginDto.setAuthorDto(authorDto);
-		
-		//Set mobile number Article Entity
+
+		// Set mobile number Article Entity
 		authorLoginDto.setAuthorMobileNumber(author.getMobileNumber());
-		
+
 		return authorLoginDto;
 	}
+
 	public static AuthorDto convertToAuthorDto(Author articleAuthor) {
 		AuthorDto authorDto = null;
 		/*
 		 * Only author user name and email is set here
 		 */
 		Preconditions.checkArgument(articleAuthor != null);
-			authorDto = new AuthorDto();
-			authorDto.setAuthorUserName(articleAuthor.getAuthorUserName());
-			authorDto.setAuthorEmail(articleAuthor.getAuthorEmail());
-
-		
+		authorDto = new AuthorDto();
+		authorDto.setAuthorUserName(articleAuthor.getAuthorUserName());
+		authorDto.setAuthorEmail(articleAuthor.getAuthorEmail());
 
 		return authorDto;
 	}
 
-	public static Author convertToAuthorEntity(AuthorDto authorDto, Author author) {
-		Preconditions.checkArgument(authorDto!=null, "AuthorDto cannot be converted. As it is empty");
-		Preconditions.checkArgument(author!=null, "Author entity passed should not be null");
+	public static Author convertToAuthorEntity(AuthorDto authorDto,
+			Author author) {
+		Preconditions.checkArgument(authorDto != null,
+				"AuthorDto cannot be converted. As it is empty");
+		Preconditions.checkArgument(author != null,
+				"Author entity passed should not be null");
 		author.setAuthorUserName(authorDto.getAuthorUserName());
 		author.setAuthorEmail(authorDto.getAuthorEmail());
 		return author;
 	}
+
 	/**
 	 * Doesn't convert {@link Author} field of {@link AuthorRegistrationDto}
 	 * 
@@ -202,8 +205,10 @@ public class ServiceUtils {
 	 */
 	public static PersonalDetails convertToPersonalDetailsEntity(
 			AuthorRegistrationDto ard, PersonalDetails pde) {
-		Preconditions.checkArgument(null != ard, "Personal Details cannot be empty");
-		Preconditions.checkArgument(ard!=null, "PersonalDetails entity cannot be empty");
+		Preconditions.checkArgument(null != ard,
+				"Personal Details cannot be empty");
+		Preconditions.checkArgument(ard != null,
+				"PersonalDetails entity cannot be empty");
 		pde.setAddress(ard.getAddress());
 		pde.setDateOfBirth(ard.getAdminDateOfBirth());
 		pde.setFirstName(ard.getAdminFirstName());
@@ -214,7 +219,7 @@ public class ServiceUtils {
 
 	public static Role convertToRoleEntity(RoleDto roleDto, Role role) {
 		Preconditions.checkArgument(roleDto != null && role != null);
-		//Rolenames should be saved in uppercase
+		// Rolenames should be saved in uppercase
 		role.setRoleName(roleDto.getRoleName().toUpperCase());
 		return role;
 	}
@@ -237,8 +242,9 @@ public class ServiceUtils {
 
 	public static Privilege convertToPrivilegeEntity(PrivilegeDto privilegeDto,
 			Privilege privilege) {
-		//Privileges should be saved in uppercase
-		privilege.setPrivilegeName(privilegeDto.getPrivilegeName().toUpperCase());
+		// Privileges should be saved in uppercase
+		privilege.setPrivilegeName(privilegeDto.getPrivilegeName()
+				.toUpperCase());
 		return privilege;
 	}
 

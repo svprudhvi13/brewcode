@@ -5,7 +5,6 @@ import static in.brewcode.api.service.common.ServiceUtils.convertToAuthorEntity;
 import static in.brewcode.api.service.common.ServiceUtils.convertToAuthorWithRoleDto;
 import static in.brewcode.api.service.common.ServiceUtils.convertToPrivilegeDto;
 import static in.brewcode.api.service.common.ServiceUtils.convertToPrivilegeEntity;
-import static in.brewcode.api.service.common.ServiceUtils.convertToRoleDto;
 import static in.brewcode.api.service.common.ServiceUtils.convertToRoleEntity;
 import in.brewcode.api.dto.AuthorDto;
 import in.brewcode.api.dto.AuthorWithRoleDto;
@@ -27,7 +26,6 @@ import in.brewcode.api.persistence.entity.Role;
 import in.brewcode.api.service.IAdminService;
 import in.brewcode.api.service.common.ServiceUtils;
 
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;

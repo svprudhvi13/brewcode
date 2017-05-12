@@ -1,4 +1,4 @@
-package in.brewcode.test.persistence;
+package in.brewcode.test.service;
 
 import in.brewcode.api.config.PersistenceConfig;
 import in.brewcode.api.dto.ArticleDto;
@@ -16,7 +16,6 @@ import java.util.List;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.log4j.Logger;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,8 +26,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(loader = AnnotationConfigContextLoader.class, classes = { PersistenceConfig.class })
-public class ArticleDaoTest {
-	private final Logger log = Logger.getLogger(ArticleDaoTest.class);
+public class ArticleServiceTest {
+	private final Logger log = Logger.getLogger(ArticleServiceTest.class);
 	@Autowired
 	private IAdminService adminService;
 	@Autowired
@@ -49,7 +48,7 @@ public class ArticleDaoTest {
 		
 	}
 	@Test
-	@Ignore
+//	@Ignore
 	@Transactional
 	public void createArticlewithNoErrors() throws UserNotFoundException {
 		ArticleDto articleDto = new ArticleDto();

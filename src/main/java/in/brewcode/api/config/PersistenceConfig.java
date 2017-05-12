@@ -4,9 +4,11 @@ import java.util.Properties;
 
 import javax.sql.DataSource;
 
+import org.apache.log4j.Logger;
 import org.apache.tomcat.dbcp.dbcp.BasicDataSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
@@ -27,36 +29,29 @@ import com.google.common.base.Preconditions;
 @Configuration
 @EnableTransactionManagement
 @PropertySource("classpath:/persistence-${envTarget:mysql}.properties")
-//@ComponentScan(basePackages={"in.brewcode.api.persistence", "in.brewcode.api.service"} )
+@ComponentScan(basePackages={"in.brewcode.api.persistence", "in.brewcode.api.service"} )
 @EnableJpaRepositories(basePackages = "in.brewcode.api.persistence.dao", queryLookupStrategy = Key.CREATE_IF_NOT_FOUND)
 
 public class PersistenceConfig {
 
+	private static Logger logger = Logger.getLogger(PersistenceConfig.class);
 	/**
 	 * Loads properties from above mentioned @PropertySource values
 	 */
-	private static final String ENTITY_PACKAGE="in.brewcode.api.persistence.entity";
 	@Autowired
 	private Environment env;
 
+	private static final String ENTITY_PACKAGE="in.brewcode.api.persistence.entity";
+
 	public PersistenceConfig() {
 		super();
+		logger.info("PersistenceConfig configuration initializing");
 	}
 
-	@Bean
-	public LocalContainerEntityManagerFactoryBean entityManagerFactory() {
-		final LocalContainerEntityManagerFactoryBean entityManager = new LocalContainerEntityManagerFactoryBean();
-		entityManager.setDataSource(restDataSource());
-		entityManager.setPackagesToScan(new String[]{ENTITY_PACKAGE});
-		entityManager.setJpaProperties(hibernateProperties());
-		JpaVendorAdapter hibernateVendorAdapter = new HibernateJpaVendorAdapter();
-		entityManager.setJpaVendorAdapter(hibernateVendorAdapter);
-		
-	return entityManager;
-	}
 
 	@Bean
 	public DataSource restDataSource() {
+		logger.info("Initializing restDataSource..");
 		final BasicDataSource dataSource = new BasicDataSource();
 		dataSource.setDriverClassName(Preconditions.checkNotNull(env
 				.getProperty("jdbc.driverClassName")));
@@ -72,18 +67,40 @@ public class PersistenceConfig {
 
 	@Bean
 	@Autowired
-	public PlatformTransactionManager transactionManager() {
+	public LocalContainerEntityManagerFactoryBean entityManagerFactory() {
+		logger.info("Initializing LocalContainerEntityManagerFactoryBean..");
+		final LocalContainerEntityManagerFactoryBean entityManager = new LocalContainerEntityManagerFactoryBean();
+		entityManager.setDataSource(restDataSource());
+		entityManager.setPackagesToScan(new String[]{ENTITY_PACKAGE});
+		entityManager.setJpaProperties(hibernateProperties());
+		JpaVendorAdapter hibernateVendorAdapter = new HibernateJpaVendorAdapter();
+		entityManager.setJpaVendorAdapter(hibernateVendorAdapter);
+		
+	return entityManager;
+	}
+
+	/**
+	 * Gets autowired {@link LocalContainerEntityManagerFactoryBean} from above
+	 * @param entityManagerFactory
+	 * @return
+	 */
+	@Bean
+	//@Autowired
+	public PlatformTransactionManager transactionManager(final LocalContainerEntityManagerFactoryBean entityManagerFactory) {
 		 JpaTransactionManager transactionManager = new JpaTransactionManager();
-		transactionManager.setEntityManagerFactory( entityManagerFactory().getObject());
+		 logger.info("Initializing PlatformTransactionManager..");
+		 transactionManager.setEntityManagerFactory( entityManagerFactory.getObject());
 		return transactionManager;
 	}
 
 	@Bean
 	public PersistenceExceptionTranslationPostProcessor exceptionTranslation() {
+		logger.info("Initializing PersistenceExceptionTranslationPostProcessor");
 		return new PersistenceExceptionTranslationPostProcessor();
 	}
 
 	final Properties hibernateProperties() {
+logger.info("Getting hibernate properties..");
 		final Properties hibernateProperties = new Properties();
 		hibernateProperties.setProperty("hibernate.hbm2ddl.auto",
 				env.getProperty("hibernate.hbm2ddl.auto"));
@@ -105,8 +122,8 @@ public class PersistenceConfig {
 	 * class load
 	 */
 	@Bean
-	//@Autowired
 	public static PropertySourcesPlaceholderConfigurer getPropertySourcesPlaceholderConfigurer() {
+		logger.info("Loading PropertySourcesPlaceholderConfigurer");
 		return new PropertySourcesPlaceholderConfigurer();
 	}
 
@@ -115,18 +132,19 @@ public class PersistenceConfig {
 	 * Commented now, 
 	 */
 	
-	@Bean
+/*	@Bean
 	public DataSourceInitializer dataSourceInitializer(
 			final DataSource dataSource) {
 		final DataSourceInitializer initializer = new DataSourceInitializer();
 		initializer.setDataSource(dataSource);
-	/**
+	logger.info("Initializing Data Source: "+ dataSource.getClass().toString());
+		*//**
 	 * Removed after adding one client
-	 */
+	 *//*
 		//	initializer.setDatabasePopulator(databasePopulator());
 		return initializer;
 	}
-	/**
+*/	/**
 	 * Note to dev: Add all the tables of application in the resource here
 	 */
 	/**
