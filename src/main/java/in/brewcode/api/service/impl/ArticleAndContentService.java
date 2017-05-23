@@ -6,6 +6,7 @@ import static in.brewcode.api.service.common.ServiceUtils.convertToContentEntity
 import static in.brewcode.api.service.common.ServiceUtils.converttoArticleEntity;
 import in.brewcode.api.dto.ArticleDto;
 import in.brewcode.api.dto.ContentDto;
+import in.brewcode.api.exception.ArticleNotFoundException;
 import in.brewcode.api.persistence.dao.IAdminAuthorDao;
 import in.brewcode.api.persistence.dao.IArticleDao;
 import in.brewcode.api.persistence.dao.IContentDao;
@@ -25,10 +26,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.google.common.base.Preconditions;
+
 @Service(value = "articleAndContentService")
 @Transactional
-public class ArticleAndContentService  implements
-		IArticleAndContentService {
+public class ArticleAndContentService implements IArticleAndContentService {
 
 	private static Logger logger = Logger
 			.getLogger(ArticleAndContentService.class);
@@ -152,7 +153,7 @@ public class ArticleAndContentService  implements
 	}
 
 	public void deleteContent(long id) {
-		// Todo logic
+
 	}
 
 	public void deleteArticle(long id) {
@@ -160,23 +161,23 @@ public class ArticleAndContentService  implements
 
 	}
 
-	public ArticleDto getFullArticleById(long id) {
-		ArticleDto articleDto = null;
+	public ArticleDto getFullArticleById(long id)
+			throws ArticleNotFoundException {
+		
 		Article article = articleDao.findOne(id);
+		if (article == null) {
+			throw new ArticleNotFoundException(
+					"Article name or id doesn't exist");
+		} else {
 
-		Hibernate.initialize(article.getArticleContents());
-		System.out
-				.println(Hibernate.isInitialized(article.getArticleContents())
-						+ " **Status of initialize");
-		if (Preconditions.checkNotNull(article != null)) {
-			for (Content c : article.getArticleContents()) {
-				System.out.println(c.toString() + "*** content");
-			}
+			Hibernate.initialize(article.getArticleContents());
+			logger.info(Hibernate.isInitialized(article.getArticleContents())
+					+ " **Status of initialize");
 
-			articleDto = convertToArticleDto(article);
+			return convertToArticleDto(article);
 
 		}
-		return articleDto;
+
 	}
 
 }

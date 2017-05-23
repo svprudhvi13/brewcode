@@ -5,6 +5,7 @@ import in.brewcode.api.persistence.entity.Article;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 
+
 public interface IArticleDao extends JpaRepository<Article, Long>, JpaSpecificationExecutor<Article> {
 
 	/*

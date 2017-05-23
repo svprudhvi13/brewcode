@@ -2,6 +2,7 @@ package in.brewcode.api.web.error;
 
 import in.brewcode.api.exception.InvalidAccessException;
 import in.brewcode.api.exception.PrivilegeNotFoundException;
+import in.brewcode.api.exception.ResourceNotFoundException;
 import in.brewcode.api.exception.UserNotFoundException;
 
 import org.springframework.http.HttpHeaders;
@@ -23,7 +24,7 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler{
 	}
 	@ExceptionHandler(UserNotFoundException.class)
 	public ResponseEntity<Object> handleUserNotFoundException(UserNotFoundException ex, WebRequest request){
-		return handleExceptionInternal(ex,"user not found." , new HttpHeaders(), HttpStatus.BAD_REQUEST, request);
+		return handleExceptionInternal(ex,ex.getMessage(), new HttpHeaders(), HttpStatus.BAD_REQUEST, request);
 	}
 	@ExceptionHandler(InvalidAccessException.class)
 	public ResponseEntity<Object> handleIllegalUserAccessException(InvalidAccessException ex, WebRequest request){
@@ -42,4 +43,8 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler{
 	public ResponseEntity<Object> handlesSQLException(Exception ex, WebRequest request){
 		return handleExceptionInternal(ex, "db is busy. we are working on it", new HttpHeaders(), HttpStatus.INTERNAL_SERVER_ERROR, request);
 	}*/
+	@ExceptionHandler(ResourceNotFoundException.class)
+	public ResponseEntity<Object> handleEntityNotFoundException(ResourceNotFoundException ex, WebRequest request){
+		return handleExceptionInternal(ex,ex.getMessage() , new HttpHeaders(), HttpStatus.BAD_REQUEST, request);
+	}
 }

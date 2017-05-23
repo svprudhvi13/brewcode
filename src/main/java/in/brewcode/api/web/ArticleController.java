@@ -3,6 +3,7 @@ package in.brewcode.api.web;
 
 import in.brewcode.api.dto.ArticleDto;
 import in.brewcode.api.dto.ContentDto;
+import in.brewcode.api.exception.ArticleNotFoundException;
 import in.brewcode.api.service.IArticleAndContentService;
 import in.brewcode.api.web.common.BaseController;
 
@@ -52,26 +53,27 @@ public class ArticleController extends BaseController {
 	 * @param id
 	 * @param response
 	 * @return
+	 * @throws ArticleNotFoundException 
 	 */
 	@RequestMapping(value = "/{id}", method = RequestMethod.GET )
 	@ResponseBody
-	public ArticleDto getArticleByIdWithContents(@PathVariable("id") long id, HttpServletResponse response){
+	public ArticleDto getArticleByIdWithContents(@PathVariable("id") long id, HttpServletResponse response) throws ArticleNotFoundException{
 		ArticleDto articleDto = null;
 		
 		articleDto=articleAndContentService.getFullArticleById(id);
 		logger.debug(articleDto.toString()+"	"+ this.toString());
 		return articleDto;
 	}
-	@RequestMapping(value = "/content/{id}", method = RequestMethod.GET )
+	@RequestMapping(value = "{articleId}/content/{contentId}", method = RequestMethod.GET )
 	@ResponseBody
-	public ContentDto getContent(@PathVariable("id") long id, HttpServletResponse response){
+	public ContentDto getContent(@PathVariable("articleId") long articleId, @PathVariable("contentId") long contentId, HttpServletResponse response){
 		ContentDto contentDto = null;
 		
-		contentDto=articleAndContentService.getContentById(id);
+		contentDto=articleAndContentService.getContentById(contentId);
 		return contentDto;
 	}
 
-	@RequestMapping(value = "/content/", method = RequestMethod.PUT )
+	@RequestMapping(value = "{articleId}/content/{contentId}", method = RequestMethod.PUT )
 	@ResponseStatus(HttpStatus.CREATED)
 	public void addContent(@RequestBody ContentDto contentDto, HttpServletResponse response){
 		Preconditions.checkNotNull(contentDto);
