@@ -1,45 +1,41 @@
 package in.brewcode.api.persistence.entity.common;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 
 import javax.persistence.Column;
 import javax.persistence.MappedSuperclass;
 import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
 
 @MappedSuperclass
 public class CommonEntity {
 	@Column(name = "IS_ACTIVE")
 	private char isActive;
 
-	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "CREATED_DATE")
-	private Date createdDate;
+	private LocalDateTime createdDate;
 
-	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "LAST_UPDATED_DATE")
-	private Date lastUpdatedDate;
+	private LocalDateTime lastUpdatedDate;
 
 	@PrePersist
 	protected void onCreate() {
 
-		this.createdDate = this.lastUpdatedDate = new Date();
+		this.createdDate = this.lastUpdatedDate = LocalDateTime.now();
 		this.isActive = 'Y';
 	}
 
 	@PreUpdate
 	protected void onUpdate() {
-		this.lastUpdatedDate = new Date(new java.util.Date().getTime());
+		this.lastUpdatedDate = LocalDateTime.now();
 
 	}
 
-	public Date getCreateDate() {
+	public LocalDateTime getCreateDate() {
 		return createdDate;
 	}
 
-	public Date getLastUpdatedDate() {
+	public LocalDateTime getLastUpdatedDate() {
 		return lastUpdatedDate;
 	}
 

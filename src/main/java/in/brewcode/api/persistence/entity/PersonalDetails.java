@@ -2,7 +2,7 @@ package in.brewcode.api.persistence.entity;
 
 import in.brewcode.api.persistence.entity.common.CommonEntity;
 
-import java.util.Date;
+import java.time.LocalDate;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -30,7 +30,7 @@ public class PersonalDetails extends CommonEntity{
 	
 	
 	@Column(name="DATE_OF_BIRTH")
-	private Date dateOfBirth;
+	private LocalDate dateOfBirth;
 	
 	@Column(name="ADDRESS")
 	private String address;
@@ -63,11 +63,11 @@ public class PersonalDetails extends CommonEntity{
 	}
 
 
-	public Date getDateOfBirth() {
+	public LocalDate getDateOfBirth() {
 		return dateOfBirth;
 	}
 
-	public void setDateOfBirth(Date dateOfBirth) {
+	public void setDateOfBirth(LocalDate dateOfBirth) {
 		this.dateOfBirth = dateOfBirth;
 	}
 

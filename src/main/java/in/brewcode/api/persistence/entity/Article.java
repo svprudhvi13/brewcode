@@ -25,6 +25,11 @@ import org.hibernate.annotations.Where;
 @SQLDelete(sql = "UPDATE T_ARTICLE SET IS_ACTIVE='N' WHERE ARTICLE_ID=?")
 @Where(clause = "IS_ACTIVE = 'Y'")
 public class Article implements Serializable {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -4449651831370640080L;
+
 	@Id
 	@GeneratedValue
 	@Column(name = "ARTICLE_ID")

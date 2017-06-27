@@ -21,6 +21,11 @@ import org.hibernate.annotations.Where;
 @Table(name = "T_AUTHOR")
 @Where(clause = "IS_ACTIVE = 'Y'")
 public class Author extends CommonEntity implements Serializable {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 2960311956692763153L;
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	@Column(name = "AUTHOR_ID")

@@ -1,6 +1,6 @@
 package in.brewcode.api.dto;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 
 public class ContentDto {
 
@@ -30,9 +30,9 @@ public class ContentDto {
 	/*
 	 * Set via Constructor insert only.
 	 */
-	private Date contentDtoCreatedDate;
+	private LocalDateTime contentDtoCreatedDate;
 	
-	private Date contentDtoLastEditedDate;
+	private LocalDateTime contentDtoLastEditedDate;
 
 
 	private char isActive;
@@ -61,20 +61,20 @@ public class ContentDto {
 		this.contentDtoMediaPath = contentDtoMediaPath;
 	}
 
-	public Date getContentDtoCreatedDate() {
+	public LocalDateTime getContentDtoCreatedDate() {
 		return contentDtoCreatedDate;
 	}
 
-	public void setContentDtoCreatedDate(Date contentDtoCreatedDate) {
-		this.contentDtoCreatedDate = contentDtoCreatedDate;
+	public void setContentDtoCreatedDate(LocalDateTime localDateTime) {
+		this.contentDtoCreatedDate = localDateTime;
 	}
 
-	public Date getContentDtoLastEditedDate() {
+	public LocalDateTime getContentDtoLastEditedDate() {
 		return contentDtoLastEditedDate;
 	}
 
-	public void setContentDtoLastEditedDate(Date contentDtoLastEditedDate) {
-		this.contentDtoLastEditedDate = contentDtoLastEditedDate;
+	public void setContentDtoLastEditedDate(LocalDateTime localDateTime) {
+		this.contentDtoLastEditedDate = localDateTime;
 	}
 
 	public char getIsActive() {

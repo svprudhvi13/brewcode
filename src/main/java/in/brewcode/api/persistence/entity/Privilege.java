@@ -25,6 +25,11 @@ import org.hibernate.annotations.Where;
 
 public class Privilege extends CommonEntity implements Serializable {
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -4312083439289841859L;
+
 	@Id
 	@Column(name="PRIVILEGE_ID")
 	@GeneratedValue(strategy=GenerationType.AUTO)

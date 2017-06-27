@@ -25,8 +25,6 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
-import javax.print.attribute.HashAttributeSet;
-
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.log4j.Logger;
 import org.junit.Before;
@@ -35,7 +33,6 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -81,6 +78,11 @@ public class AdminServiceTest {
 		RoleDto rd = new RoleDto();
 		rd.setRoleName(TEST_ROLE_NAME);
 		rd.setPrivileges(new HashSet<PrivilegeDto>() {
+			/**
+			 * 
+			 */
+			private static final long serialVersionUID = -1284691853816480333L;
+
 			{
 				add(pd);
 			}

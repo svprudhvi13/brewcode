@@ -9,7 +9,7 @@ import in.brewcode.api.dto.AuthorRegistrationDto;
 import in.brewcode.api.exception.UserAlreadyExistsException;
 import in.brewcode.api.exception.UserNotFoundException;
 
-import java.util.Date;
+import java.time.LocalDate;
 
 import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.Before;
@@ -28,7 +28,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public class CustomUserDetailsServiceTest {	
 	//Used in @Before method. static as it has to load first
-	private static final String username=RandomStringUtils.randomAlphanumeric(7);
+	private static final String USERNAME=RandomStringUtils.randomAlphanumeric(7);
 
 	@Autowired
 	private ICustomUserDetailsService cuds;
@@ -42,7 +42,8 @@ public class CustomUserDetailsServiceTest {
 		AuthorLoginDto ald = new AuthorLoginDto();
 
 		ard.setAddress(RandomStringUtils.randomAlphabetic(100));
-		ard.setAdminDateOfBirth(new Date());
+		//Just to test
+		ard.setAdminDateOfBirth(LocalDate.now());
 		ard.setAdminFirstName(RandomStringUtils.randomAlphabetic(10));
 		ard.setAdminLastName(RandomStringUtils.randomAlphabetic(10));
 		ard.setConfirmPassword("password");
@@ -65,12 +66,12 @@ public class CustomUserDetailsServiceTest {
 		AuthorLoginDto ald = new AuthorLoginDto();
 
 		ard.setAddress(RandomStringUtils.randomAlphabetic(100));
-		ard.setAdminDateOfBirth(new Date());
+		ard.setAdminDateOfBirth(LocalDate.now());
 		ard.setAdminFirstName(RandomStringUtils.randomAlphabetic(10));
 		ard.setAdminLastName(RandomStringUtils.randomAlphabetic(10));
 		ard.setConfirmPassword("password");
 		//From this class' static variable
-		ad.setAuthorUserName(CustomUserDetailsServiceTest.username);
+		ad.setAuthorUserName(CustomUserDetailsServiceTest.USERNAME);
 		ad.setAuthorEmail(RandomStringUtils.randomAlphanumeric(6)
 				+ "@email.com");
 		ald.setAdminPassword("password");
@@ -90,11 +91,11 @@ public class CustomUserDetailsServiceTest {
 		AuthorLoginDto ald = new AuthorLoginDto();
 
 		ard.setAddress(RandomStringUtils.randomAlphabetic(100));
-		ard.setAdminDateOfBirth(new Date());
+		ard.setAdminDateOfBirth(LocalDate.now());
 		ard.setAdminFirstName(RandomStringUtils.randomAlphabetic(10));
 		ard.setAdminLastName(RandomStringUtils.randomAlphabetic(10));
 		ard.setConfirmPassword("password");
-		ad.setAuthorUserName(CustomUserDetailsServiceTest.username);
+		ad.setAuthorUserName(CustomUserDetailsServiceTest.USERNAME);
 		ad.setAuthorEmail(RandomStringUtils.randomAlphanumeric(6)
 				+ "@gmail.com");
 		ald.setAdminPassword("password");
@@ -107,7 +108,7 @@ public class CustomUserDetailsServiceTest {
 	}
 @Test 
 public void getExistingUserProfile_NoError() throws UserNotFoundException{
-	AuthorRegistrationDto ard = cuds.getUserProfile(CustomUserDetailsServiceTest.username);
+	AuthorRegistrationDto ard = cuds.getUserProfile(CustomUserDetailsServiceTest.USERNAME);
 	System.out.println(ard.getAuthorLoginDto().getAuthorDto().getAuthorUserName() + " "+ard.getAuthorLoginDto().getAuthorDto().getAuthorEmail());
 	org.springframework.util.Assert.notNull(ard, "Profile found");
 	
@@ -115,7 +116,7 @@ public void getExistingUserProfile_NoError() throws UserNotFoundException{
 	@Test
 	//@Ignore
 	public void getExistingUserDetails_NoError() {
-		UserDetails userDetails = cuds.loadUserByUsername(CustomUserDetailsServiceTest.username);
+		UserDetails userDetails = cuds.loadUserByUsername(CustomUserDetailsServiceTest.USERNAME);
 	
 	org.springframework.util.Assert.notNull(userDetails, " found");
 	}

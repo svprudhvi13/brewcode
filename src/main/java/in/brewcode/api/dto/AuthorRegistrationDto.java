@@ -1,6 +1,8 @@
 package in.brewcode.api.dto;
 
-import java.util.Date;
+
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 import javax.validation.constraints.NotNull;
 
@@ -22,11 +24,11 @@ public class AuthorRegistrationDto {
 	private String adminLastName;
 	@NotNull
 	@org.codehaus.jackson.annotate.JsonIgnore
-	private Date adminDateOfBirth;
+	private LocalDate adminDateOfBirth;
 	
 	@JsonIgnore
 	@org.codehaus.jackson.annotate.JsonIgnore
-	private Date adminCreatedDate;
+	private LocalDateTime adminCreatedDate;
 	
 	private String address;
 	
@@ -42,12 +44,12 @@ public class AuthorRegistrationDto {
 	@NotNull
 	private String confirmPassword;
 
-	public Date getAdminDateOfBirth() {
+	public LocalDate getAdminDateOfBirth() {
 		return adminDateOfBirth;
 	}
 
-	public void setAdminDateOfBirth(Date adminDateOfBirth) {
-		this.adminDateOfBirth = adminDateOfBirth;
+	public void setAdminDateOfBirth(LocalDate localDate) {
+		this.adminDateOfBirth = localDate;
 	}
 
 
@@ -74,11 +76,11 @@ public class AuthorRegistrationDto {
 	 */
 	
 
-	public Date getAdminCreatedDate() {
+	public LocalDateTime getAdminCreatedDate() {
 		return adminCreatedDate;
 	}
 
-	public void setAdminCreatedDate(Date adminCreatedDate) {
+	public void setAdminCreatedDate(LocalDateTime adminCreatedDate) {
 		this.adminCreatedDate = adminCreatedDate;
 	}
 
