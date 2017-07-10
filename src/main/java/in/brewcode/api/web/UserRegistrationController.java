@@ -47,7 +47,7 @@ public class UserRegistrationController extends BaseController {
 	 * @param authorRegistrationDto
 	 * @throws UserAlreadyExistsException
 	 */
-	//@PreAuthorize("#oauth2.hasAnyScope('client', 'admin_app')")
+	@PreAuthorize("#oauth2.hasAnyScope('client', 'admin_app')")
 	@RequestMapping(value = "/register", method = RequestMethod.POST)
 	@ResponseStatus(value = HttpStatus.CREATED)
 	public void registerUser(
@@ -67,7 +67,7 @@ public class UserRegistrationController extends BaseController {
 	 * @throws InvalidAccessException
 	 * @throws UserNotFoundException
 	 */
-	@PreAuthorize("#oauth2.hasAnyScope() and hasRole('WRITE')")
+	//@PreAuthorize("#oauth2.hasAnyScope()")// and hasRole('WRITE')")
 	@RequestMapping(value="/{username}", method=RequestMethod.GET)
 	@ResponseBody
 	public ResponseEntity<AuthorRegistrationDto> getUserProfile(@PathVariable("username") String username, 	@AuthenticationPrincipal User user) throws InvalidAccessException, UserNotFoundException{
