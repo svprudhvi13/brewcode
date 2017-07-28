@@ -5,6 +5,8 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>in</groupId>
 	<artifactId>brewcode</artifactId>
+		<version>0.0.1-SNAPSHOT</version>
+	
 	<packaging>war</packaging>
 	<name>Brewcode</name>
 	<description>Api for content management.</description>
@@ -262,9 +264,5 @@
 	<reporting>
 		<outputDirectory>/home/ai/workspace/brewcode/target/site</outputDirectory>
 	</reporting>
-	<parent>
-		<groupId>in.brewcode</groupId>
-		<artifactId>source</artifactId>
-		<version>0.0.1-SNAPSHOT</version>
-	</parent>
+
 </project>
