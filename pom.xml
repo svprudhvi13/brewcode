@@ -239,22 +239,22 @@
 		</repository>
 	</repositories>
 	<build>
-		<sourceDirectory>/home/ai/workspace/brewcode/src/main/java</sourceDirectory>
-		<scriptSourceDirectory>/home/ai/workspace/brewcode/src/main/scripts</scriptSourceDirectory>
-		<testSourceDirectory>/home/ai/workspace/brewcode/src/test/java</testSourceDirectory>
-		<outputDirectory>/home/ai/workspace/brewcode/target/classes</outputDirectory>
-		<testOutputDirectory>/home/ai/workspace/brewcode/target/test-classes</testOutputDirectory>
+		<sourceDirectory>src/main/java</sourceDirectory>
+		<scriptSourceDirectory>src/main/scripts</scriptSourceDirectory>
+		<testSourceDirectory>src/test/java</testSourceDirectory>
+		<outputDirectory>target/classes</outputDirectory>
+		<testOutputDirectory>target/test-classes</testOutputDirectory>
 		<resources>
 			<resource>
-				<directory>/home/ai/workspace/brewcode/src/main/resources</directory>
+				<directory>src/main/resources</directory>
 			</resource>
 		</resources>
 		<testResources>
 			<testResource>
-				<directory>/home/ai/workspace/brewcode/src/test/resources</directory>
+				<directory>src/test/resources</directory>
 			</testResource>
 		</testResources>
-		<directory>/home/ai/workspace/brewcode/target</directory>
+		<directory>target</directory>
 		<finalName>brewcode-0.0.1-SNAPSHOT</finalName>
 
 
@@ -262,7 +262,7 @@
 		</plugins>
 	</build>
 	<reporting>
-		<outputDirectory>/home/ai/workspace/brewcode/target/site</outputDirectory>
+		<outputDirectory>target/site</outputDirectory>
 	</reporting>
 
 </project>
